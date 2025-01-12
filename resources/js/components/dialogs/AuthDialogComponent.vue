@@ -19,10 +19,10 @@
             <v-card-text>
                 <v-tabs-window v-model="activeTab">
                     <v-tabs-window-item value="0">
-                        <LoginFormComponent />
+                        <LoginFormComponent :dialog="dialog" @update:dialog="dialog = $event" />
                     </v-tabs-window-item>
                     <v-tabs-window-item value="1">
-                        <RegistrationFormComponent />
+                        <RegistrationFormComponent :dialog="dialog" @update:dialog="dialog = $event" />
                     </v-tabs-window-item>
                 </v-tabs-window>
             </v-card-text>

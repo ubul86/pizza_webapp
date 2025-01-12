@@ -1,10 +1,12 @@
 <script setup>
-import { ref } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 import useForm from "@/composables/useForm";
 import { useRegistrationStore } from '@/stores/registration.store.js';
+import { useToast } from 'vue-toastification';
 
 const { generalError, formErrors, resetErrors, handleApiError } = useForm();
 const registrationStore = useRegistrationStore();
+const toast = useToast()
 
 const formData = ref({
     name: "",
@@ -12,10 +14,18 @@ const formData = ref({
     password: "",
 });
 
+defineProps({
+    dialog: Boolean,
+});
+
+const emit = defineEmits(['update:dialog']);
+
 const registration = async() => {
     resetErrors();
     try {
         await registrationStore.registration(formData.value);
+        toast.success('Registration successful! Please check your email to verify your account.');
+        emit('update:dialog', false);
     } catch (error) {
         handleApiError(error);
     }
