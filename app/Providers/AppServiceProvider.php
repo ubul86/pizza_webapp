@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Repositories\AdminAuthRepository;
 use App\Repositories\Interfaces\AdminUserAuthenticationInterface;
+use App\Repositories\Interfaces\MediaRepositoryInterface;
 use App\Repositories\Interfaces\UserRegistrationInterface;
+use App\Repositories\MediaRepository;
 use App\Repositories\UserRegistrationRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AdminUserAuthenticationInterface::class, AdminAuthRepository::class);
         $this->app->bind(UserAuthenticationInterface::class, AuthRepository::class);
         $this->app->bind(UserRegistrationInterface::class, UserRegistrationRepository::class);
+        $this->app->bind(MediaRepositoryInterface::class, MediaRepository::class);
     }
 
     /**

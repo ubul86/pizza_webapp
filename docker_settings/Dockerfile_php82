@@ -10,8 +10,24 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     libcurl4-openssl-dev \
+    libmagickwand-dev \
+    imagemagick \
+    dma \
+    libicu-dev \
+    libmcrypt-dev \
+    zlib1g-dev \
+    libxml2-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libpng-dev \
+    ca-certificates \
+    libzip-dev \
+    libldap2-dev \
+    libonig-dev \
+    mariadb-client \
+    sqlite3 \
     && rm -rf /var/lib/apt/lists/*
-
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
@@ -24,6 +40,19 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && pecl install redis \
     && docker-php-ext-enable redis
 
+#RUN apt-get install -y libmagickwand-dev
+
+RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+# install imagick
+# Version is not officially released https://pecl.php.net/get/imagick but following works for PHP 8
+RUN mkdir -p /usr/src/php/ext/imagick; \
+    curl -fsSL https://github.com/Imagick/imagick/archive/06116aa24b76edaf6b1693198f79e6c295eda8a9.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1; \
+    docker-php-ext-install imagick;
+
+RUN rm -rf /var/lib/apt/lists/* && rm -rf /tmp/pear/*
+
+#RUN docker-php-ext-install imagick
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

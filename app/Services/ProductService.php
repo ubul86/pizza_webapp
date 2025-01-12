@@ -8,6 +8,7 @@ use App\Repositories\Interfaces\ProductRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
 
 class ProductService
 {
@@ -86,7 +87,9 @@ class ProductService
 
             if ($files) {
                 foreach ($files as $file) {
-                    $path = $file->store('uploads/images', 'public');
+                    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+                    $path = Storage::disk('s3')->putFileAs('product-images', $file, $filename);
 
                     $image = Image::create([
                         'path' => $path,
