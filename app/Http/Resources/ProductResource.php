@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Services\GlideImageService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Product;
@@ -32,6 +33,12 @@ class ProductResource extends JsonResource
                 return [
                     'id' => $image->id,
                     'path' => Storage::url($image->path),
+                    'presets' => [
+                        'four_small' => GlideImageService::getGlideImagePath($image->path, 'p=four_small'),
+                        'actual_small' => GlideImageService::getGlideImagePath($image->path, 'p=actual_small'),
+                        'small' => GlideImageService::getGlideImagePath($image->path, 'p=small'),
+                        'big' => GlideImageService::getGlideImagePath($image->path, 'p=big'),
+                    ],
                     'first' => $image->pivot->first,
                 ];
             }),
