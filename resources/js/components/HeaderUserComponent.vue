@@ -24,6 +24,7 @@
                             <router-link to="/shop" class="menu-link">Shop</router-link>
                             <router-link to="/contact" class="menu-link">Contact</router-link>
                             <router-link to="/about" class="menu-link">About</router-link>
+                            <AuthDialogComponent/>
                             <CartComponent />
                         </v-col>
                         <v-col cols="auto" class="d-lg-none">
@@ -63,6 +64,7 @@
 <script setup>
     import { ref } from 'vue'
     import CartComponent from '@/components/CartComponent.vue'
+    import AuthDialogComponent from '@/components/dialogs/AuthDialogComponent.vue'
 
     const drawer = ref(false);
 </script>

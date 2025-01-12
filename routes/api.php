@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AuthController;
 
 Route::post('/admin/auth/login', [AdminAuthController::class, 'login']);
+Route::post('/auth/login', [AuthController::class, 'login']);
 
 Route::post('/admin/auth/refresh-token', [AuthController::class, 'refreshToken']);
 
