@@ -1,0 +1,5 @@
+FROM mysql:8.2
+
+COPY my.cnf /etc/mysql/conf.d/my-local.cnf
+
+RUN chmod 444 /etc/mysql/conf.d/my-local.cnf

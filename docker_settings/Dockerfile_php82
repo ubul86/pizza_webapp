@@ -1,0 +1,37 @@
+FROM php:8.2-fpm
+
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libxml2-dev \
+    libonig-dev \
+    libzip-dev \
+    unzip \
+    git \
+    libcurl4-openssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install soap \
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-install pdo pdo_mysql \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install opcache \
+    && pecl install redis \
+    && docker-php-ext-enable redis
+
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+ENV COMPOSER_MEMORY_LIMIT=-1
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+WORKDIR /var/www/html
+
+EXPOSE 9000

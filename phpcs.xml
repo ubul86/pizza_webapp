@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel Standard">
+
+    <!--
+     The content of the description tag is not displayed anywhere
+     except in this file, so it can contain information for
+     developers who may change this file in the future.
+    -->
+    <description>This is the Laravel coding standard</description>
+
+    <!--
+     If no files or directories are specified on the command line
+     your custom standard can specify what files should be checked
+     instead.
+
+     Note that file and directory paths specified in a ruleset are
+     relative to the ruleset's location, and that specifying any file or
+     directory path on the command line will ignore all file tags.
+    -->
+    <file>./app</file>
+    <file>./tests</file>
+
+    <exclude-pattern>resources/*/*</exclude-pattern>
+
+    <arg name="extensions" value="php" />
+    <arg name="report" value="full"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <!--
+     Include all sniffs in the PSR12 standard.
+    -->
+    <rule ref="PSR12"/>
+
+    <rule ref="PSR1">
+        <exclude name="PSR1.Methods.CamelCapsMethodName" />
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
+        <exclude name="Generic.Files.LineLength.TooLong" />
+        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
+    </rule>
+
+    <!--
+     You can hard-code custom php.ini settings into your custom standard.
+     The following tag sets the memory limit to 64M.-->
+
+    <!--<ini name="memory_limit" value="64M"/> -->
+
+    <!--
+     Here we are including a specific sniff but also changing
+     the error message of a specific message inside the sniff.
+     Note that the specific code for the message, which is
+     CommentFound in this case, is defined by the sniff developer.
+     You can display these codes by using the -s command line
+     argument when checking a file.
+
+     Also note that this message has a variable inside it,
+     which is why it is important that sniffs use a printf style
+     format for their error messages.
+
+     We also drop the severity of this message from the
+     default value (5) so that it is hidden by default. It can be
+     displayed by setting the minimum severity on the PHP_CodeSniffer
+     command line. This is great if you want to use some messages
+     only in code reviews and not have them block code commits.
+    -->
+    <rule ref="Generic.Commenting.Todo.CommentFound">
+        <message>Please review this TODO comment: %s</message>
+        <severity>3</severity>
+    </rule>
+
+    <!--
+     Array values are specified by using "element" tags
+     with "key" and "value" attributes.
+
+     NOTE: This syntax is is only supported in PHP_CodeSniffer
+     versions 3.3.0 and greater.
+    -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <element key="delete" value="unset"/>
+                <element key="create_function" value="null"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!--
+     If you are including another standard, some array properties may
+     have already been defined. Instead of having to redefine them
+     you can choose to extend the property value instead. Any elements with
+     new keys will be added to the property value, and any elements with
+     existing keys will override the imported value.
+
+     NOTE: This syntax is is only supported in PHP_CodeSniffer
+     versions 3.4.0 and greater.
+    -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array" extend="true">
+                <element key="sizeof" value="count"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!--
+     There is a special internal error message produced by PHP_CodeSniffer
+     when it is unable to detect code in a file, possible due to
+     the use of short open tags even though php.ini disables them.
+     You can disable this message in the same way as sniff messages.
+
+     Again, the code here will be displayed in the PHP_CodeSniffer
+     output when using the -s command line argument while checking a file.
+    -->
+    <rule ref="Internal.NoCodeFound">
+        <severity>0</severity>
+    </rule>
+
+
+</ruleset>

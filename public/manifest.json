@@ -1,0 +1,23 @@
+{
+  "resources/js/app.js": {
+    "file": "js/app.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "css": [
+      "css/app.css"
+    ],
+    "assets": [
+      "css/vite.svg",
+      "css/vue.svg"
+    ]
+  },
+  "resources/js/assets/vite.svg": {
+    "file": "css/vite.svg",
+    "src": "resources/js/assets/vite.svg"
+  },
+  "resources/js/assets/vue.svg": {
+    "file": "css/vue.svg",
+    "src": "resources/js/assets/vue.svg"
+  }
+}
