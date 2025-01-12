@@ -17,6 +17,10 @@
 
 This is a pizza order test application built with Laravel 10 for the backend and Vue 3 for the frontend, featuring Pinia for state management and Vuetify for UI components.
 
+The application includes integration with S3 MinIO buckets for storing images, with image serving handled by the Glide image manipulator and Memcached caching for multiple presets.
+
+The system also includes an admin panel, allowing for the management of products and orders, including viewing and modifying pizza offerings, checking customer orders, and updating inventory.
+
 ## Features
 
 ## Minimum Requirements
@@ -34,15 +38,25 @@ This project uses Docker to containerize the different components of the applica
 
 - **nginx**: The Nginx service serves as a reverse proxy for the application, routing HTTP requests to the appropriate backend services.
 
+- **image-nginx**: Another instance of Nginx responsible for serving images using Glide with caching enabled.
+
 - **php**: This service runs the PHP application (Laravel) using PHP 8.1. It is the core backend service that handles HTTP requests, interacts with the database, and manages the application logic. The service shares the application codebase with the host machine to enable hot-reloading during development.
 
-- **mysql**: This service runs the MySQL database server, which stores the application's data. The database is configured with persistent storage to retain data across container restarts. The database credentials and other environment variables are defined in the `.env` file.
+- **mysql82**: This service runs the MySQL database server, which stores the application's data. The database is configured with persistent storage to retain data across container restarts. The database credentials and other environment variables are defined in the `.env` file.
+
+- **mysql_test**: A separate MySQL database service used for testing purposes.
 
 - **phpmyadmin**: A web-based interface for managing MySQL databases. It allows developers to interact with the database, run queries, and manage tables via a user-friendly UI. The service is accessible via a browser on port 80 (or a custom port defined in the `.env` file).
 
 - **node**: This service is responsible for building and serving the Vue.js frontend application. It runs the Node.js server, compiles assets, and serves the frontend during development.
-- 
+
 - **selenium**: This service runs Selenium with a Chrome browser in a container to allow automated browser testing. It listens on port 4444 and is used for running Dusk tests.
+
+- **mailhog**: A test email service that captures outgoing emails.
+
+- **minio**: MinIO service for storing images in S3-compatible buckets.
+
+
 
 
 ## Installation With Docker
