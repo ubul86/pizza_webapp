@@ -9,12 +9,19 @@ import AdminHomeView from '@/views/AdminHomeView.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import AdminProductView from '@/views/AdminProductView.vue';
 import AdminOrderView from '@/views/AdminOrderView.vue';
+import ActivationView from '@/views/ActivationView.vue'
 
 const routes = [
     {
         path: '/',
         name: 'Home',
         component: Home,
+        meta: { requiresAuth: false },
+    },
+    {
+        path: '/activation/:token',
+        name: 'Activation',
+        component: ActivationView,
         meta: { requiresAuth: false },
     },
     {

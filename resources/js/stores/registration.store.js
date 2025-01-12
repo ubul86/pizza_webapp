@@ -14,5 +14,9 @@ export const useRegistrationStore = defineStore('RegistrationStore', {
                 throw error;
             }
         },
+
+        async activation(token) {
+            return await RegistrationService.activation(token);
+        }
     },
 });

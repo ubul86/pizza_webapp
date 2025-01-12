@@ -30,8 +30,7 @@ class UserRegistrationService
             Mail::to($user->email)->send(new ActivationEmail($user));
 
             return $user;
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }

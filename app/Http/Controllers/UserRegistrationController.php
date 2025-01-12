@@ -22,11 +22,9 @@ class UserRegistrationController extends Controller
             $this->userRegistrationService->registration($request->toArray());
 
             return response()->json(['message' => 'Registration is success! Please check your mail to activate your user.']);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
     public function activation(ActivationRequest $request): JsonResponse
@@ -35,10 +33,8 @@ class UserRegistrationController extends Controller
             $this->userRegistrationService->activation($request->token);
 
             return response()->json(['message' => 'User activated successfully!']);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
-
     }
 }

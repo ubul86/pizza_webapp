@@ -2,12 +2,21 @@ import { publicApi } from "./api";
 
 class RegistrationService {
     async registration(user) {
-        const response = await publicApi.post('/registration', {
+        return publicApi.post(`/registration`, {
             name: user.name,
             email: user.email,
             password: user.password,
-        });
-        return response.data.data;
+        }).then((response) => response.data.data)
+            .catch((error) => {
+                throw error;
+            });
+    }
+
+    async activation(token) {
+        return publicApi.post(`/activation`, {token}).then((response) => response.data.data)
+            .catch((error) => {
+                throw error;
+            });
     }
 
 }
