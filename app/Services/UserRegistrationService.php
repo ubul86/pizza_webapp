@@ -3,29 +3,30 @@
 namespace App\Services;
 
 use App\Mail\ActivationEmail;
-use App\Models\Category;
 use App\Models\User;
-use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\OrderRepositoryInterface;
 use App\Repositories\Interfaces\UserRegistrationInterface;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserRegistrationService
 {
     protected UserRegistrationInterface $userRegistration;
+    protected OrderRepositoryInterface $orderRepository;
 
-    public function __construct(UserRegistrationInterface $userRegistration)
+    public function __construct(UserRegistrationInterface $userRegistration, OrderRepositoryInterface $orderRepository)
     {
         $this->userRegistration = $userRegistration;
+        $this->orderRepository = $orderRepository;
     }
 
     public function registration(array $data): User
     {
         try {
             $user = $this->userRegistration->registration($data);
+
+            $this->orderRepository->assignUserToOrdersByEmail($user->id, $user->email);
 
             Mail::to($user->email)->send(new ActivationEmail($user));
 

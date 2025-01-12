@@ -13,4 +13,5 @@ interface OrderRepositoryInterface
     public function store(array $data): Order;
     public function update(int $id, array $data): Order;
     public function destroy(int $id): bool|null;
+    public function assignUserToOrdersByEmail(int $userId, string $email): int;
 }
