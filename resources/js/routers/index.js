@@ -91,7 +91,11 @@ router.beforeEach(async (to, from, next) => {
         await userStore.getAuthenticatedUser();
     }
 
-    const isAdmin = userStore.user.is_admin;
+    let isAdmin = false;
+
+    if (userStore.user) {
+        isAdmin = userStore.user.is_admin;
+    }
 
     if (to.name === 'AdminLogin' && isAuthenticated && isAdmin) {
         return next({ name: 'AdminHome' });
