@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Factories\ImageUploaderFactory;
 use App\Models\Image;
 use App\Models\Product;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
@@ -87,9 +88,8 @@ class ProductService
 
             if ($files) {
                 foreach ($files as $file) {
-                    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-
-                    $path = Storage::disk('s3')->putFileAs('product-images', $file, $filename);
+                    $uploader = ImageUploaderFactory::createUploader();
+                    $path = $uploader->upload($file);
 
                     $image = Image::create([
                         'path' => $path,

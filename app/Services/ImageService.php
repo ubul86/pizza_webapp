@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Storage;
 
 class ImageService
 {
-    protected $path;
-    protected $type;
-    protected $preset;
+    protected string $path;
+    protected string|int $type;
+    protected string $preset;
 
     public function setPath(string $path): self
     {

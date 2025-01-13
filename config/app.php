@@ -185,4 +185,6 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'image_upload_to' => env('IMAGE_UPLOAD_TO', 's3'),
+
 ];
