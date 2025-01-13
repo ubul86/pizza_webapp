@@ -49,6 +49,50 @@ export const useProductStore = defineStore('product', {
                 console.error('Failed to upload images', error);
                 throw error;
             }
+        },
+
+        async setImageToFirst(productId, image) {
+            await productService.setImageToFirst(productId, image.id)
+
+            const productIndex = this.products.findIndex((p) => p.id === productId);
+
+            if (productIndex !== -1) {
+                const product = { ...this.products[productIndex] };
+                console.log(product);
+
+                product.images.forEach((image) => {
+                    image.first = 0;
+                });
+
+                const targetImageIndex = product.images.findIndex((img) => img.id === image.id);
+
+                if (targetImageIndex !== -1) {
+                    product.images[targetImageIndex].first = 1;
+                    this.products.splice(productIndex, 1, product);
+                }
+            }
+        },
+
+        async deleteImage(productId, image) {
+            await productService.deleteImage(productId, image.id)
+
+            const productIndex = this.products.findIndex((p) => p.id === productId);
+
+            if (productIndex !== -1) {
+                const product = { ...this.products[productIndex] };
+                console.log(product);
+
+                product.images.forEach((image) => {
+                    image.first = 0;
+                });
+
+                const targetImageIndex = product.images.findIndex((img) => img.id === image.id);
+
+                if (targetImageIndex !== -1) {
+                    product.images.splice(targetImageIndex, 1);
+                    this.products.splice(productIndex, 1, product);
+                }
+            }
         }
     },
 });

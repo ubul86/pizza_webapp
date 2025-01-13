@@ -13,4 +13,9 @@ class LocalUploaderStrategy implements ImageUploadStrategyInterface
         $path = Storage::disk('local')->putFile('product-images', $file);
         return Storage::url($path);
     }
+
+    public function delete(string $path): bool
+    {
+        return Storage::disk('local')->delete($path);
+    }
 }

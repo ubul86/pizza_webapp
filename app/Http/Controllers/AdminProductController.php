@@ -95,4 +95,24 @@ class AdminProductController extends Controller
             return response()->json(['message' => 'Failed to upload images'], 500);
         }
     }
+
+    public function setImageToFirst(Request $request): JsonResponse
+    {
+        try {
+            $this->productService->setImageToFirst($request->get('productId'), $request->get('imageId'));
+            return response()->json(['message' => 'Products deleted successfully']);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 404);
+        }
+    }
+
+    public function deleteImage(Request $request): JsonResponse
+    {
+        try {
+            $this->productService->deleteImage($request->get('productId'), $request->get('imageId'));
+            return response()->json(['message' => 'Products deleted successfully']);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 404);
+        }
+    }
 }

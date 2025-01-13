@@ -5,10 +5,12 @@ namespace App\Services;
 use App\Factories\ImageUploaderFactory;
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductService
@@ -104,6 +106,49 @@ class ProductService
 
             return $product;
         } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function setImageToFirst(int $productId, int $imageId): bool
+    {
+        try {
+            ProductImage::where('product_id', $productId)
+                ->update(['first' => 0]);
+
+            ProductImage::where('product_id', $productId)
+                ->where('image_id', $imageId)
+                ->update(['first' => 1]);
+
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function deleteImage(int $productId, int $imageId): bool
+    {
+        try {
+            return DB::transaction(function () use ($productId, $imageId) {
+
+                ProductImage::where('product_id', $productId)
+                    ->where('image_id', $imageId)
+                    ->delete();
+
+                $isImageUsedElsewhere = ProductImage::where('image_id', $imageId)->exists();
+
+                if (!$isImageUsedElsewhere) {
+                    $imageToDelete = Image::findOrFail($imageId);
+
+                    $imageToDelete->delete();
+
+                    $uploader = ImageUploaderFactory::createUploader();
+                    $uploader->delete($imageToDelete->path);
+                }
+
+                return true;
+            });
+        } catch (Exception $e) {
             throw $e;
         }
     }

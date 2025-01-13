@@ -13,4 +13,9 @@ class S3UploaderStrategy implements ImageUploadStrategyInterface
         $filename = uniqid() . '.' . $file->getClientOriginalExtension();
         return Storage::disk('s3')->putFileAs('product-images', $file, $filename);
     }
+
+    public function delete(string $path): bool
+    {
+        return Storage::disk('s3')->delete($path);
+    }
 }

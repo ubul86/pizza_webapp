@@ -73,46 +73,53 @@
     <v-dialog v-model="imageDialog" max-width="600px">
         <v-card>
             <v-card-title>Upload Images</v-card-title>
-
             <v-card-text>
-                <div v-if="editedItem.value.images.length > 0">
+
+                <div v-if="editedItem.value?.images?.length > 0">
                     <v-row>
                         <v-col
-                            v-for="image in editedItem.value.images"
-                            :key="image.id"
+                            v-for="(image, index) in editedItem.value.images"
+                            :key="index"
                             class="image-preview"
                         >
-                            <a :href="image?.presets?.actual_small" target="_blank" class="image-link">
-                                <v-img
-                                    :src="image?.presets?.actual_small"
-                                    alt="Uploaded Image"
-                                    class="image-thumbnail"
-                                    height="200"
-                                    aspect-ratio="4/3"
-                                    contain
-                                >
-                                    <template v-slot:placeholder>
-                                        <v-skeleton-loader
-                                            type="rect"
-                                            :width="'100%'"
-                                            :height="'200px'"
-                                        ></v-skeleton-loader>
-                                    </template>
-                                </v-img>
-                            </a>
+                            <v-hover>
+                                <template v-slot:default="{ isHovering, props }">
+                                    <v-img
+                                        v-bind="props"
+                                        :src="image?.presets?.actual_small"
+                                        alt="Uploaded Image"
+                                        :aspect-ratio="16/9"
+                                        contain
+                                    >
+                                        <v-expand-transition>
+                                            <div
+                                                v-if="isHovering"
+                                                class="d-flex transition-fast-in-fast-out bg-grey-darken-2 v-card--reveal text-h2"
+                                                style="height: 50%;"
+                                            >
+                                                <v-btn icon @click="setFirstImage(image)" v-if="!image.first">
+                                                    <v-icon size="small">mdi-star</v-icon>
+                                                </v-btn>
+                                                <v-btn icon @click="deleteImage(image)">
+                                                    <v-icon size="small">mdi-delete</v-icon>
+                                                </v-btn>
+                                            </div>
+                                        </v-expand-transition>
+                                    </v-img>
+                                </template>
+                            </v-hover>
                         </v-col>
                     </v-row>
                 </div>
-
                 <v-file-input v-model="files" label="Select images" multiple />
                 <v-btn color="blue" @click="uploadImages" class="mt-2">Upload</v-btn>
             </v-card-text>
-
             <v-card-actions>
                 <v-btn color="blue" @click="closeImageDialog">Close</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
+
 
 
 </template>
@@ -148,10 +155,10 @@ onBeforeUnmount(() => {
 const files = ref([])
 const imageDialog = ref(false)
 
-const openImageDialog = (item) => {
+const openImageDialog = async (item) => {
     editedItem.value = item;
-    console.log(editedItem.value)
     imageDialog.value = true;
+    await nextTick();
 };
 
 const closeImageDialog = () => {
@@ -298,6 +305,24 @@ const uploadImages = async () => {
     }
 }
 
+const setFirstImage = async (image) => {
+    try {
+        await productStore.setImageToFirst(editedItem.value.id, image);
+    }
+    catch(error) {
+        console.log(error);
+    }
+
+}
+
+const deleteImage = async (image) => {
+    try {
+        await productStore.deleteImage(editedItem.value.id, image);
+    }
+    catch(error) {
+        console.log(error);
+    }
+}
 
 </script>
 
@@ -319,6 +344,15 @@ const uploadImages = async () => {
     .used-time-container {
         align-items: flex-end;
     }
+}
+
+.v-card--reveal {
+    align-items: center;
+    bottom: 0;
+    justify-content: space-evenly;
+    opacity: .9;
+    position: absolute;
+    width: 100%;
 }
 
 </style>

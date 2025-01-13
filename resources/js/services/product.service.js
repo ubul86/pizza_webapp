@@ -54,6 +54,30 @@ class ProductService {
                 throw error;
             });
     }
+
+    setImageToFirst(productId, imageId) {
+        return privateApi
+            .post(`/product/set-image-to-first`, {
+                productId,
+                imageId
+            })
+            .then((response) => response.data.data)
+            .catch((error) => {
+                throw error;
+            });
+    }
+
+    deleteImage(productId, imageId) {
+        return privateApi
+            .post(`/product/delete-image`, {
+                productId,
+                imageId
+            })
+            .then((response) => response.data.data)
+            .catch((error) => {
+                throw error;
+            });
+    }
 }
 
 export default new ProductService();
