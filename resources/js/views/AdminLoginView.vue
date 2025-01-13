@@ -3,11 +3,13 @@
 import { ref } from "vue";
 import useForm from "@/composables/useForm";
 import { useAuthStore } from "@/stores/auth.store";
+import { useUserStore } from '@/stores/user.store.js';
 import { useRouter } from 'vue-router'
 
 const router = useRouter();
 const { generalError, formErrors, resetErrors, handleApiError } = useForm();
 const adminAuthStore = useAuthStore();
+const userStore = useUserStore();
 
 const formData = ref({
     email: "",
@@ -19,6 +21,7 @@ const handleLogin = async () => {
     resetErrors();
     try {
         await adminAuthStore.loginToAdmin(formData.value);
+        await userStore.getAuthenticatedUser();
         await router.push('/admin');
     } catch (error) {
         handleApiError(error);
