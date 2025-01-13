@@ -93,6 +93,7 @@ class ProductService
 
                     $image = Image::create([
                         'path' => $path,
+                        'type' => Image::TYPE_S3
                     ]);
 
                     $imageIds[] = $image->id;

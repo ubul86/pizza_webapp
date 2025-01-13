@@ -76,13 +76,35 @@
 
             <v-card-text>
                 <div v-if="editedItem.value.images.length > 0">
-                    <div v-for="image in editedItem.value.images" :key="image.id" class="image-preview">
-                        <img :src="image.path" alt="Uploaded Image" class="image-thumbnail">
-                    </div>
+                    <v-row>
+                        <v-col
+                            v-for="image in editedItem.value.images"
+                            :key="image.id"
+                            class="image-preview"
+                        >
+                            <a :href="image?.presets?.actual_small" target="_blank" class="image-link">
+                                <v-img
+                                    :src="image?.presets?.actual_small"
+                                    alt="Uploaded Image"
+                                    class="image-thumbnail"
+                                    height="200"
+                                    aspect-ratio="4/3"
+                                    contain
+                                >
+                                    <template v-slot:placeholder>
+                                        <v-skeleton-loader
+                                            type="rect"
+                                            :width="'100%'"
+                                            :height="'200px'"
+                                        ></v-skeleton-loader>
+                                    </template>
+                                </v-img>
+                            </a>
+                        </v-col>
+                    </v-row>
                 </div>
 
                 <v-file-input v-model="files" label="Select images" multiple />
-
                 <v-btn color="blue" @click="uploadImages" class="mt-2">Upload</v-btn>
             </v-card-text>
 

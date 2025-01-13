@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Services\GlideImageService;
+use App\Models\Image;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Product;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @property Product $resource
@@ -20,6 +20,9 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        $imageServiceForFirstImage = app(ImageService::class);
+
         return [
             'id' => $this->resource->id,
             'category' => $this->resource->category ? $this->resource->category->name : null,
@@ -30,22 +33,34 @@ class ProductResource extends JsonResource
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
             'images' => $this->resource->images->map(function ($image) {
+
+                $imageService = app(ImageService::class)
+                    ->setPath($image->path)
+                    ->setType($image->type);
+
                 return [
                     'id' => $image->id,
-                    'path' => Storage::url($image->path),
-                    'presets' => [
-                        'four_small' => GlideImageService::getGlideImagePath($image->path, 'p=four_small'),
-                        'actual_small' => GlideImageService::getGlideImagePath($image->path, 'p=actual_small'),
-                        'small' => GlideImageService::getGlideImagePath($image->path, 'p=small'),
-                        'big' => GlideImageService::getGlideImagePath($image->path, 'p=big'),
-                    ],
+                    'presets' => $this->getImagePresets($image, $imageService),
                     'first' => $image->pivot->first,
                 ];
             }),
             'firstImage' => $this->resource->images->firstWhere('pivot.first', true) ? [
-                'path' => Storage::url($this->resource->images->firstWhere('pivot.first', true)->path),
+                'presets' => $this->getImagePresets($this->resource->images->firstWhere('pivot.first', true), $imageServiceForFirstImage),
                 'first' => 1,
             ] : null,
+        ];
+    }
+
+    private function getImagePresets(Image $image, ImageService $imageService): array
+    {
+        $imageService->setPath($image->path)
+            ->setType($image->type);
+
+        return [
+            'four_small' => $imageService->setPreset('four_small')->build(),
+            'actual_small' => $imageService->setPreset('actual_small')->build(),
+            'small' => $imageService->setPreset('small')->build(),
+            'big' => $imageService->setPreset('big')->build(),
         ];
     }
 }

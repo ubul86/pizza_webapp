@@ -23,7 +23,7 @@
                         <v-col class="align-start">
                             <div class="d-flex align-content-space-around">
                                 <v-img
-                                    :src="orderItem.product.firstImage?.path"
+                                    :src="orderItem.product.firstImage.presets.actual_small"
                                     alt="Logo"
                                     width="30"
                                     height="30"

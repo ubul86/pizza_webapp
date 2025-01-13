@@ -155,7 +155,7 @@
                                 class="product-card-item"
                                 :key="product.id"
                                 @click="addToOrder(product)"
-                                :style="{ backgroundImage: 'url(' + product.firstImage?.path + ')' }"
+                                :style="{ backgroundImage: 'url(' + product?.firstImage?.presets?.big + ')' }"
                             >
                                 <div class="card-content">
                                     <div class="product-name-container">

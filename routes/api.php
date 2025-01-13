@@ -49,5 +49,5 @@ Route::middleware('check.admin.jwt')->group(function () {
     Route::put('/product/{id}', [AdminProductController::class, 'update']);
     Route::delete('/product/{id}', [AdminProductController::class, 'destroy']);
     Route::delete('/product/bulk-destroy', [AdminProductController::class, 'bulkDestroy']);
-    Route::post('/product/upload-images/{itemId}', [ProductController::class, 'uploadImages']);
+    Route::post('/product/upload-images/{itemId}', [AdminProductController::class, 'uploadImages']);
 });

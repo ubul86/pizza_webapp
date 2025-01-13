@@ -114,7 +114,7 @@
                         <v-col class="align-start">
                             <div class="d-flex align-center" style="padding-left: 10px;">
                                 <v-img
-                                    :src="orderItem.item.firstImage.path"
+                                    :src="orderItem.item.firstImage.presets.actual_small"
                                     alt="Logo"
                                     width="50"
                                     max-width="50"
