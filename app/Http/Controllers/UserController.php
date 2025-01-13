@@ -20,8 +20,7 @@ class UserController extends Controller
         try {
             $users =  $this->userService->index();
             return response()->json($users);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 404);
         }
     }
@@ -30,8 +29,7 @@ class UserController extends Controller
     {
         try {
             return response()->json(auth()->user());
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 404);
         }
     }

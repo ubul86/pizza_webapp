@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories\Interfaces;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;

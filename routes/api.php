@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserRegistrationController;
+use App\Http\Controllers\AdminProductController;
 
 Route::post('/registration', [UserRegistrationController::class, 'registration']);
 Route::post('/activation', [UserRegistrationController::class, 'activation'])->name('activation');
@@ -16,17 +17,14 @@ Route::post('/activation', [UserRegistrationController::class, 'activation'])->n
 Route::post('/admin/auth/login', [AdminAuthController::class, 'login']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
+Route::get('/user/get-authenticated-user', [UserController::class, 'getAuthenticatedUser']);
+
 Route::post('/admin/auth/refresh-token', [AuthController::class, 'refreshToken']);
 
 Route::get('/product', [ProductController::class, 'index']);
 Route::get('/product/{id}', [ProductController::class, 'show']);
-Route::delete('/product/bulk-destroy', [ProductController::class, 'bulkDestroy']);
-
-Route::post('/product/upload-images/{itemId}', [ProductController::class, 'uploadImages'])->middleware('check.admin.jwt');;
 
 Route::get('/order', [OrderController::class])->middleware('auth.optional');
-
-Route::get('/user/get-authenticated-user', [UserController::class, 'getAuthenticatedUser']);
 
 Route::apiResource('user', UserController::class);
 Route::apiResource('order', OrderController::class);
@@ -45,8 +43,11 @@ Route::middleware('auth.api')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
 
+/** Csak adminnak elérhető route-ok */
 Route::middleware('check.admin.jwt')->group(function () {
-    Route::post('/product', [ProductController::class, 'store']);
-    Route::put('/product/{id}', [ProductController::class, 'update']);
-    Route::delete('/product/{id}', [ProductController::class, 'destroy']);
+    Route::post('/product', [AdminProductController::class, 'store']);
+    Route::put('/product/{id}', [AdminProductController::class, 'update']);
+    Route::delete('/product/{id}', [AdminProductController::class, 'destroy']);
+    Route::delete('/product/bulk-destroy', [AdminProductController::class, 'bulkDestroy']);
+    Route::post('/product/upload-images/{itemId}', [ProductController::class, 'uploadImages']);
 });

@@ -23,5 +23,4 @@ class UserService
             throw $e;
         }
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -10,7 +11,6 @@ use App\Repositories\Interfaces\MediaRepositoryInterface;
 class MediaController
 {
     private MediaRepositoryInterface $mediaRepository;
-
     public function __construct(MediaRepositoryInterface $mediaRepository)
     {
         $this->mediaRepository = $mediaRepository;
@@ -19,7 +19,7 @@ class MediaController
     public function publicImage(Request $request, string $path): StreamedResponse
     {
         try {
-            //SignatureFactory::create(config('glide.signature'))->validateRequest($path, $_GET);
+//SignatureFactory::create(config('glide.signature'))->validateRequest($path, $_GET);
         } catch (SignatureException $e) {
             abort(404);
         }

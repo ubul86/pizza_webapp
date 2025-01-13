@@ -1,6 +1,6 @@
 <?php
-namespace App\Repositories;
 
+namespace App\Repositories;
 
 use League\Glide\Responses\LaravelResponseFactory;
 use League\Glide\ServerFactory;
@@ -13,7 +13,6 @@ class MediaRepository implements MediaRepositoryInterface
     private string $sourceDisk;
     private string $cacheDisk;
     private array $presets;
-
     public function __construct()
     {
         $this->sourceDisk = config('file.source_disk');
@@ -34,7 +33,6 @@ class MediaRepository implements MediaRepositoryInterface
             'presets' => $this->presets,
             //'watermarks' => new Filesystem(new Local(public_path())),
         ]);
-
         return $server->getImageResponse($path, $options);
     }
 }
