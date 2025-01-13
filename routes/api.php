@@ -26,6 +26,8 @@ Route::post('/product/upload-images/{itemId}', [ProductController::class, 'uploa
 
 Route::get('/order', [OrderController::class])->middleware('auth.optional');
 
+Route::get('/user/get-authenticated-user', [UserController::class, 'getAuthenticatedUser']);
+
 Route::apiResource('user', UserController::class);
 Route::apiResource('order', OrderController::class);
 Route::apiResource('category', CategoryController::class);

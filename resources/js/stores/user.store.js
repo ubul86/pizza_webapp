@@ -4,6 +4,7 @@ import userService from '@/services/user.service.js'
 export const useUserStore = defineStore('user', {
     state: () => ({
         users: [],
+        user: null
     }),
     actions: {
         async fetchUsers() {
@@ -13,6 +14,9 @@ export const useUserStore = defineStore('user', {
             catch(error) {
                 console.log(error);
             }
+        },
+        async getAuthenticatedUser() {
+            this.user = await userService.getAuthenticatedUser();
         }
     },
 });
