@@ -349,7 +349,7 @@ const deleteImage = async (image) => {
 .v-card--reveal {
     align-items: center;
     bottom: 0;
-    justify-content: space-evenly;
+    justify-content: center;
     opacity: .9;
     position: absolute;
     width: 100%;

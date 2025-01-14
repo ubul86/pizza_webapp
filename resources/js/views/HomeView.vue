@@ -150,22 +150,40 @@
             <v-col>
                 <div class="products-container">
                     <v-row>
-                        <v-col cols=12 sm="4" md="4" lg="4" v-for="product in selectedProducts" :key="product.id" class="product-card m-2">
-                            <v-card
-                                class="product-card-item"
-                                :key="product.id"
-                                @click="addToOrder(product)"
-                                :style="{ backgroundImage: 'url(' + product?.firstImage?.presets?.big + ')' }"
-                            >
-                                <div class="card-content">
-                                    <div class="product-name-container">
-                                        {{ product.name }}
-                                    </div>
-                                    <div class="price-container">
-                                        {{ product.price }}
-                                    </div>
-                                </div>
-                            </v-card>
+                        <v-col cols=12 sm="4" md="4" lg="3" xl="2" v-for="product in selectedProducts" :key="product.id" class="product-card m-2">
+                            <v-hover>
+                                <template v-slot:default="{ isHovering, props }">
+                                    <v-card
+                                        class="product-card-item"
+                                        :key="product.id"
+                                        v-bind="props"
+                                        :style="{ backgroundImage: 'url(' + product?.firstImage?.presets?.big + ')' }"
+                                    >
+                                        <div class="card-content">
+                                            <div class="product-name-container">
+                                                {{ product.name }}
+                                            </div>
+                                            <div class="price-container">
+                                                {{ product.price }}
+                                            </div>
+                                        </div>
+                                        <v-expand-transition>
+                                            <div
+                                                v-if="isHovering"
+                                                class="d-flex transition-fast-in-fast-out bg-grey-lighten-2 v-card--reveal text-h2"
+                                                style="height: 50%;"
+                                            >
+                                                <v-btn icon class="mr-2">
+                                                    <v-icon size="small" @click="addToOrder(product)">mdi-plus</v-icon>
+                                                </v-btn>
+                                                <v-btn icon>
+                                                    <v-icon size="small">mdi-pizza</v-icon>
+                                                </v-btn>
+                                            </div>
+                                        </v-expand-transition>
+                                    </v-card>
+                                </template>
+                            </v-hover>
                         </v-col>
                     </v-row>
                 </div>
