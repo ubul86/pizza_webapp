@@ -2,6 +2,7 @@
 
     import { ref, computed } from 'vue';
     import { useUserOrderStore } from '@/stores/user.order.store.js';
+    import { useUserStore } from '@/stores/user.store.js';
     import useForm from '@/composables/useForm.js';
 
     import HeaderUserComponent from '@/components/HeaderUserComponent.vue'
@@ -12,10 +13,18 @@
 
 
     const orderStore = useUserOrderStore();
+    const userStore = useUserStore();
 
-    const name = ref(null);
-    const email_address = ref(null);
-    const phone_number = ref(null);
+    const defaultUser = {
+        name: null,
+        email: null,
+    };
+
+    const loggedUser = computed(() => userStore.user || defaultUser);
+
+    const name = ref(loggedUser.value.name);
+    const email_address = ref(loggedUser.value.email);
+    const phone_number = ref(loggedUser.value.phone_number);
 
     const orderItems = computed(() => orderStore.items);
 
