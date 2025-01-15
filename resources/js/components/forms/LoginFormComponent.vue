@@ -2,10 +2,12 @@
 import { ref, defineProps, defineEmits } from "vue";
 import useForm from "@/composables/useForm";
 import { useAuthStore } from '@/stores/auth.store.js';
+import { useUserStore } from '@/stores/user.store.js';
 import { useToast } from 'vue-toastification';
 
 const { generalError, formErrors, resetErrors, handleApiError } = useForm();
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const formData = ref({
     email: "",
@@ -24,6 +26,7 @@ const login = async() => {
     resetErrors();
     try {
         await authStore.login(formData.value);
+        await userStore.getAuthenticatedUser();
         toast.success('Login successful!');
         emit('update:dialog', false);
     } catch (error) {
