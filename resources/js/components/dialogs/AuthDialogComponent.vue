@@ -43,8 +43,10 @@ import LoginFormComponent from "@/components/forms/LoginFormComponent.vue";
 import RegistrationFormComponent from "@/components/forms/RegistrationFormComponent.vue";
 
 import { useAuthStore } from '@/stores/auth.store.js';
+import { useUserStore } from '@/stores/user.store.js'
 
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const isAuthenticated = computed(() => {
     return authStore.isAuthenticated;
@@ -53,6 +55,7 @@ const isAuthenticated = computed(() => {
 const logout = async () => {
     try {
         await authStore.logout();
+        userStore.removeUserInformations();
     }
     catch(error) {
         console.log(error);

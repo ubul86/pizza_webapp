@@ -17,6 +17,10 @@ export const useUserStore = defineStore('user', {
         },
         async getAuthenticatedUser() {
             this.user = await userService.getAuthenticatedUser();
+        },
+        removeUserInformations() {
+            this.users = [];
+            this.user = null;
         }
     },
 });
