@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card class="mb-8">
         <v-layout>
             <v-app-bar
                 class="header-app-bar"

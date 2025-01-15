@@ -12,7 +12,6 @@
     height: 685px;
     width: 100%;
     position: relative;
-    padding-top: 32px;
 }
 
 .slider-image {

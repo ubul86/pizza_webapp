@@ -18,6 +18,14 @@ class ProductService {
             });
     }
 
+    show(id) {
+        return publicApi.get(`/product/${id}`).then((response) => response.data.data)
+            .catch((error) => {
+                console.error("Failed to get authenticated user:", error);
+                throw error;
+            });
+    }
+
     update(item) {
         return privateApi.put(`/product/${item.id}`, item).then((response) => response.data.data)
             .catch((error) => {

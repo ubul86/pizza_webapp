@@ -11,6 +11,7 @@ import { useUserStore } from '@/stores/user.store.js'
 import AdminProductView from '@/views/AdminProductView.vue';
 import AdminOrderView from '@/views/AdminOrderView.vue';
 import ActivationView from '@/views/ActivationView.vue'
+import ProductView from '@/views/ProductView.vue'
 
 const routes = [
     {
@@ -23,6 +24,12 @@ const routes = [
         path: '/activation/:token',
         name: 'Activation',
         component: ActivationView,
+        meta: { requiresAuth: false, needAdminPermission: false },
+    },
+    {
+        path: '/product/:id',
+        name: 'Product',
+        component: ProductView,
         meta: { requiresAuth: false, needAdminPermission: false },
     },
     {
@@ -83,6 +90,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+    console.log(from);
     const authStore = useAuthStore();
     const userStore = useUserStore();
     const isAuthenticated = authStore.isAuthenticated;

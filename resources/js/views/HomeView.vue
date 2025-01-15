@@ -2,14 +2,13 @@
     import { ref, computed, onMounted } from 'vue';
     import { useCategoryStore } from '@/stores/category.store.js';
     import { useProductStore } from '@/stores/product.store.js'
-    import { useUserOrderStore } from '@/stores/user.order.store.js';
+    import AddToOrderButton from '@/components/AddToOrderButton.vue';
 
     import HeaderUserComponent from '@/components/HeaderUserComponent.vue'
     import SliderComponent from '@/components/SliderComponent.vue'
 
     const categoryStore = useCategoryStore();
     const productStore = useProductStore();
-    const orderStore = useUserOrderStore();
 
     const categories = computed( () => categoryStore.categories);
     const products = computed( () => productStore.products);
@@ -28,10 +27,6 @@
             return products.value.filter(product => selectedCategories.value.includes(product.category_id));
         }
     });
-
-    const addToOrder = (product) => {
-        orderStore.addItem(product);
-    };
 
     const toggleSelection = (id) => {
         if (selectedCategories.value.includes(id)) {
@@ -171,13 +166,12 @@
                                             <div
                                                 v-if="isHovering"
                                                 class="d-flex transition-fast-in-fast-out bg-grey-lighten-2 v-card--reveal text-h2"
-                                                style="height: 50%;"
+                                                style="height: 30%;"
                                             >
-                                                <v-btn icon class="mr-2">
-                                                    <v-icon size="small" @click="addToOrder(product)">mdi-plus</v-icon>
-                                                </v-btn>
+                                                <AddToOrderButton :product="product" />
                                                 <v-btn icon>
-                                                    <v-icon size="small">mdi-pizza</v-icon>
+                                                    <router-link :to="{ name: 'Product', params: { id: product.id } }" color="white"
+                                                                 class="text-black hover-orange"><v-icon size="small" color="black">mdi-pizza</v-icon></router-link>
                                                 </v-btn>
                                             </div>
                                         </v-expand-transition>

@@ -15,6 +15,10 @@ export const useProductStore = defineStore('product', {
             }
         },
 
+        async show(id) {
+            return await productService.show(id);
+        },
+
         async store(item) {
             const storedItem = await productService.store(item);
             this.products.push(storedItem);
