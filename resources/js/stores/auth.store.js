@@ -37,5 +37,8 @@ export const useAuthStore = defineStore('AuthStore', {
             this.isAuthenticated = false;
             this.user = null;
         },
+        async refreshToken() {
+            return await AuthService.refreshToken();
+        }
     },
 });

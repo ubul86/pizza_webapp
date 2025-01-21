@@ -26,11 +26,9 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            $token = $this->authRepository->login($credentials);
+            $arrayOfTokens = $this->authRepository->login($credentials);
 
-            return response()->json([
-                'token' => $token,
-            ]);
+            return response()->json($arrayOfTokens);
         } catch (NotFoundHttpException $e) {
             throw $e;
         }

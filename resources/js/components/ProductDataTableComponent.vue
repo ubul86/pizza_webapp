@@ -81,6 +81,7 @@
                             v-for="(image, index) in editedItem.value.images"
                             :key="index"
                             class="image-preview"
+                            cols="4"
                         >
                             <v-hover>
                                 <template v-slot:default="{ isHovering, props }">

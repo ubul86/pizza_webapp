@@ -3,20 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminLoginRequest;
-use App\Repositories\Interfaces\AdminUserAuthenticationInterface;
+use App\Repositories\Interfaces\UserAuthenticationInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use RuntimeException;
-use Exception;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AdminAuthController extends Controller
 {
-    protected AdminUserAuthenticationInterface $authRepository;
+    protected UserAuthenticationInterface $authRepository;
 
-    public function __construct(AdminUserAuthenticationInterface $authRepository)
+    public function __construct(UserAuthenticationInterface $authRepository)
     {
         $this->authRepository = $authRepository;
     }
@@ -26,11 +21,9 @@ class AdminAuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            $token = $this->authRepository->login($credentials);
+            $arrayOfTokens = $this->authRepository->login($credentials, 1);
 
-            return response()->json([
-                'token' => $token,
-            ]);
+            return response()->json($arrayOfTokens);
         } catch (NotFoundHttpException $e) {
             throw $e;
         }

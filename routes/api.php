@@ -17,16 +17,14 @@ Route::post('/activation', [UserRegistrationController::class, 'activation'])->n
 Route::post('/admin/auth/login', [AdminAuthController::class, 'login']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
-Route::get('/user/get-authenticated-user', [UserController::class, 'getAuthenticatedUser']);
-
-Route::post('/admin/auth/refresh-token', [AuthController::class, 'refreshToken']);
+Route::get('/auth/refresh-token', [AuthController::class, 'refreshToken']);
 
 Route::get('/product', [ProductController::class, 'index']);
 Route::get('/product/{id}', [ProductController::class, 'show']);
 
 Route::get('/order', [OrderController::class])->middleware('auth.optional');
 
-Route::apiResource('user', UserController::class);
+
 Route::apiResource('order', OrderController::class);
 Route::apiResource('category', CategoryController::class);
 
@@ -45,6 +43,7 @@ Route::middleware('auth.api')->group(function () {
 
 /** Csak adminnak elérhető route-ok */
 Route::middleware('check.admin.jwt')->group(function () {
+    Route::get('/user/get-authenticated-user', [UserController::class, 'getAuthenticatedUser']);
     Route::post('/product', [AdminProductController::class, 'store']);
     Route::put('/product/{id}', [AdminProductController::class, 'update']);
     Route::delete('/product/{id}', [AdminProductController::class, 'destroy']);
@@ -53,3 +52,5 @@ Route::middleware('check.admin.jwt')->group(function () {
     Route::post('/product/set-image-to-first', [AdminProductController::class, 'setImageToFirst']);
     Route::post('/product/delete-image', [AdminProductController::class, 'deleteImage']);
 });
+
+Route::apiResource('user', UserController::class);

@@ -26,13 +26,15 @@ const privateApi = axios.create({
 
 privateApi.interceptors.request.use(
     async (config) => {
+
         const token = localStorage.getItem('token');
 
         if (!token) {
-            return Promise.reject({ status: 401, message: "Nincs érvényes token" });
+            return Promise.reject({ status: 401, message: "There is no valid token!" });
         }
-
-        config.headers.Authorization = `Bearer ${token}`;
+        if (!config.headers.Authorization) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     },
     (error) => {
@@ -45,8 +47,22 @@ privateApi.interceptors.response.use(
     async (error) => {
         if (error && error.status === 401) {
             const authStore = useAuthStore();
-            authStore.removeToken();
-            return Promise.reject({ navigateToLogin: true });
+
+            try {
+                const token = await authStore.refreshToken();
+                if (token) {
+                    localStorage.setItem('token', token);
+                    error.config.headers.Authorization = `Bearer ${token}`;
+                    return privateApi(error.config);
+                } else {
+                    authStore.removeToken();
+                    return Promise.reject({ navigateToLogin: true });
+                }
+            } catch (refreshError) {
+                console.log(refreshError);
+                authStore.removeToken();
+                return Promise.reject({ navigateToLogin: true });
+            }
         }
         return Promise.reject(error);
     },

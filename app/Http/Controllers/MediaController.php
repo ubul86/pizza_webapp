@@ -18,11 +18,11 @@ class MediaController
 
     public function publicImage(Request $request, string $path): StreamedResponse
     {
-        try {
+        //try {
 //SignatureFactory::create(config('glide.signature'))->validateRequest($path, $_GET);
-        } catch (SignatureException $e) {
-            abort(404);
-        }
+        //} catch (SignatureException $e) {
+        //    abort(404);
+        //}
 
         return $this->mediaRepository->getImage($path, $request->except('s'));
     }

@@ -6,8 +6,11 @@ class AuthService {
             email: user.email,
             password: user.password,
         });
-        if (response.data.data.token) {
-            localStorage.setItem('token', response.data.data.token);
+        if (response.data.data) {
+            const jwtToken = response.data.data.token;
+            const refreshToken = response.data.data.refresh_token;
+            localStorage.setItem('token', jwtToken);
+            localStorage.setItem('refreshToken', refreshToken);
             return response.data.data.token;
         }
         return response.data.data;
@@ -18,8 +21,11 @@ class AuthService {
             email: user.email,
             password: user.password,
         });
-        if (response.data.data.token) {
-            localStorage.setItem('token', response.data.data.token);
+        if (response.data.data) {
+            const jwtToken = response.data.data.token;
+            const refreshToken = response.data.data.refresh_token;
+            localStorage.setItem('token', jwtToken);
+            localStorage.setItem('refreshToken', refreshToken);
             return response.data.data.token;
         }
         return response.data.data;
@@ -32,6 +38,22 @@ class AuthService {
 
     getToken() {
         return localStorage.getItem('token');
+    }
+
+    refreshToken()
+    {
+        const refreshToken = localStorage.getItem('refreshToken');
+        return privateApi.get('/auth/refresh-token', {
+            headers: {
+                'Authorization': `Bearer ${refreshToken}`
+            }
+        }).then((response) => {
+            return response.data.data.token;
+        })
+            .catch((error) => {
+                console.error("Failed to fetch token:", error);
+                throw error;
+            });
     }
 }
 
