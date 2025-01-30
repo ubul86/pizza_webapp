@@ -1,0 +1,4 @@
+sonar.projectKey=laravel_project
+sonar.sources=./app, ./tests, ./routes, ./database
+sonar.host.url=http://sonarqube:9000
+sonar.login=<TOKEN>

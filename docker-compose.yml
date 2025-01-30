@@ -158,6 +158,49 @@ services:
         networks:
             - app-network
 
+    sonarqube:
+        image: sonarqube:community
+        container_name: pizza_sonarqube
+        restart: unless-stopped
+        environment:
+            SONAR_JDBC_URL: jdbc:postgresql://sonar-db:5432/sonar
+            SONAR_JDBC_USERNAME: sonar
+            SONAR_JDBC_PASSWORD: sonar
+        ports:
+            - "9005:9000"
+        depends_on:
+            - sonar-db
+        volumes:
+            - ./docker_settings/sonarqube_data:/opt/sonarqube/data
+            - ./docker_settings/sonarqube_logs:/opt/sonarqube/logs
+            - ./docker_settings/sonarqube_extensions:/opt/sonarqube/extensions
+        networks:
+            - app-network
+
+    sonar-db:
+        image: postgres:15
+        container_name: pizza_sonar_db
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: sonar
+            POSTGRES_PASSWORD: sonar
+            POSTGRES_DB: sonar
+        volumes:
+            - ./docker_settings/sonar_db_data:/var/lib/postgresql/data
+        networks:
+            - app-network
+
+    sonar-scanner:
+        image: sonarsource/sonar-scanner-cli:latest
+        container_name: pizza_sonar_scanner
+        depends_on:
+            - sonarqube
+        working_dir: /var/www/html
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - app-network
+
 networks:
     app-network:
         driver: bridge
@@ -167,3 +210,7 @@ networks:
 volumes:
     mysql_data:
         driver: local
+    sonarqube_data:
+    sonarqube_logs:
+    sonarqube_extensions:
+    sonar_db_data:

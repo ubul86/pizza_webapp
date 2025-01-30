@@ -313,6 +313,65 @@ docker exec -it {php_fpm_container} composer analyse
 
 Note: You might need to update your phpstan.neon configuration if you encounter issues or deprecations.
 
+### PHPUnit Coverage XML to SonarQube
+
+To generate code coverage data and send it to SonarQube, run the PHPUnit tests with coverage enabled and specify the output file for the coverage report:
+
+```bash
+php artisan test --coverage-clover=tests/_output/coverage.xml
+```
+
+### SonarQube
+
+1. **Login to SonarQube:**
+
+   Access SonarQube at the following address: http://sonarqube:9000. The default login credentials are:
+
+   Username: admin
+   Password: admin
+
+2. **Create a New Project:**
+
+   After logging in, click on Create Project.
+   Follow the steps to create a new project by naming it and setting up the necessary parameters.
+
+3. **Generate a Token:**
+
+   Once the project is created, go to My Account > Security.
+   Under the Tokens section, generate a new token and save it. You will use this token for authentication when running SonarScanner.
+
+### Sonar Scanner Client
+
+To run SonarQube analysis using the SonarScanner client, follow these steps:
+
+#### With Docker:
+
+1. Run the docker-compose command
+   ```bash
+   docker-compose run sonar-scanner
+   ```
+
+#### Without Docker:
+
+1. Install SonarScanner:
+
+   Install the SonarScanner on your local machine or CI/CD pipeline environment. Follow the installation guide on the official SonarScanner website.
+
+2. Run the Scanner:
+
+   Once SonarScanner is installed and configured, navigate to the project directory and run the following command, replacing YOUR_SONARQUBE_TOKEN with the token generated earlier:
+
+    ```bash
+    sonar-scanner \
+    -Dsonar.projectKey=your_project_key \
+    -Dsonar.sources=. \
+    -Dsonar.host.url=http://sonarqube:9000 \
+    -Dsonar.login=YOUR_SONARQUBE_TOKEN
+    ```
+   This will send the code analysis results to SonarQube.
+
+
+
 ## Running Tests
 
 ### PHPUnit

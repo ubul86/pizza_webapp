@@ -69,3 +69,9 @@ yarn-error.log
 /.vscode
 /cache
 .env.testing
+/docker_settings/sonar_db_data
+/docker_settings/sonarqube_data
+/docker_settings/sonarqube_extensions
+/docker_settings/sonarqube_logs
+.scannerwork
+sonar-project.properties
