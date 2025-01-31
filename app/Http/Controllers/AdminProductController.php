@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UploadedImageRequest;
 use App\Http\Resources\ProductResource;
+use App\Services\ProductImageService;
 use App\Services\ProductService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -15,10 +16,12 @@ use Illuminate\Http\Request;
 class AdminProductController extends Controller
 {
     protected ProductService $productService;
+    protected ProductImageService $productImageService;
 
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $productService, ProductImageService $productImageService)
     {
         $this->productService = $productService;
+        $this->productImageService = $productImageService;
     }
 
     public function index(): JsonResponse
@@ -89,7 +92,7 @@ class AdminProductController extends Controller
             $files = $request->file('images');
 
             $files = is_array($files) ? $files : [$files];
-            $product = $this->productService->uploadImages($itemId, $files);
+            $product = $this->productImageService->uploadImages($itemId, $files);
             return response()->json(new ProductResource($product));
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to upload images'], 500);
@@ -99,7 +102,7 @@ class AdminProductController extends Controller
     public function setImageToFirst(Request $request): JsonResponse
     {
         try {
-            $this->productService->setImageToFirst($request->get('productId'), $request->get('imageId'));
+            $this->productImageService->setImageToFirst($request->get('productId'), $request->get('imageId'));
             return response()->json(['message' => 'Products deleted successfully']);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 404);
@@ -109,7 +112,7 @@ class AdminProductController extends Controller
     public function deleteImage(Request $request): JsonResponse
     {
         try {
-            $this->productService->deleteImage($request->get('productId'), $request->get('imageId'));
+            $this->productImageService->deleteImage($request->get('productId'), $request->get('imageId'));
             return response()->json(['message' => 'Products deleted successfully']);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 404);

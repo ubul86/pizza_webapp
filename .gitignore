@@ -74,4 +74,6 @@ yarn-error.log
 /docker_settings/sonarqube_extensions
 /docker_settings/sonarqube_logs
 .scannerwork
-sonar-project.properties
+.deptrac.cache
+myreport
+
