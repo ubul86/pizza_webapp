@@ -12,6 +12,7 @@
 - [Running Tests](#running-tests)    
 - [Docker Installation](#docker-installation)    
 - [Docker Compose Installation](#docker-compose-installation)
+- [Example Images](#example-images)
 
 ## Overview
 
@@ -449,3 +450,17 @@ https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-c
 
 ### Windows
 - Docker automatically installs Docker Compose.
+
+## Example Images
+
+![List](documents/sample_images/list.png )
+![Product View](documents/sample_images/product_view.png )
+![Cart View](documents/sample_images/cart.png )
+![Order Success](documents/sample_images/order_success.png )
+![Login Registration](documents/sample_images/login_registration.png )
+![Admin products](documents/sample_images/admin_products.png )
+![Upload Images](documents/sample_images/upload_images.png )
+![SonarQube Result](documents/sample_images/sonarqube.png )
+![PHPMetrics Result](documents/sample_images/phpmetrics.png )
+![PHPMetrics Result](documents/sample_images/mailhog.png )
+![PHPMetrics Result](documents/sample_images/minio_console.png )
