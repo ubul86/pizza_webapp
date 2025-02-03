@@ -76,4 +76,6 @@ yarn-error.log
 .scannerwork
 .deptrac.cache
 myreport
+.env.spa
+/public/spa
 

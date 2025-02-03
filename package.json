@@ -4,11 +4,14 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build --emptyOutDir",
-        "watch": "vite build --watch"
+        "build-spa": "vite build --emptyOutDir --mode spa",
+        "watch": "vite build --watch",
+        "spa": "vite --mode spa"
     },
     "dependencies": {
         "@mdi/font": "^7.4.47",
         "axios": "^1.7.7",
+        "dotenv": "^16.4.7",
         "pinia": "^2.2.6",
         "sweetalert2": "^11.14.5",
         "vue": "^3.5.12",
