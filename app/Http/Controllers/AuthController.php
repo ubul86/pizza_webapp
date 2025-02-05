@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Repositories\Interfaces\UserAuthenticationInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use RuntimeException;
@@ -58,13 +59,14 @@ class AuthController extends Controller
     public function refreshToken(): JsonResponse
     {
         try {
-            $token = JWTAuth::parseToken()->refresh();
-
+            $user = auth()->user();
+            $token = JWTAuth::fromUser($user);
             return response()->json([
                 'token' => $token,
             ]);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Could not refresh token'], 401);
+            Log::error($e);
+            return response()->json(['error' => 'Could not refresh token'], 402);
         }
     }
 }

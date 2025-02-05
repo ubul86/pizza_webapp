@@ -34,6 +34,7 @@ export const useAuthStore = defineStore('AuthStore', {
 
         removeToken() {
             localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
             this.isAuthenticated = false;
             this.user = null;
         },

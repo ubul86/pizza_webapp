@@ -27,12 +27,17 @@ class AuthRepository implements UserAuthenticationInterface
         }
 
         $tokenExpire = JWTAuth::factory()->getTTL();
-        $refreshTokenExpire = $tokenExpire * 30;
+        $refreshTokenExpire = $tokenExpire * 113000;
+
+        JWTAuth::factory()->setTTL($refreshTokenExpire);
+        $refreshToken = JWTAuth::claims(['is_refresh_token' => true])->fromUser(auth()->user());
+
+        JWTAuth::factory()->setTTL($tokenExpire);
 
         return [
             'token' => $token,
             'token_expire' => $tokenExpire,
-            'refresh_token' => JWTAuth::fromUser(auth()->user(), ['ttl' => $refreshTokenExpire])
+            'refresh_token' => $refreshToken
         ];
     }
 

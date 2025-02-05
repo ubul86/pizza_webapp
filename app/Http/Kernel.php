@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\VerifyRefreshTokenMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'auth.api' => \App\Http\Middleware\AuthenticateWithJwt::class,
         'check.admin.jwt' => \App\Http\Middleware\CheckAdminWithJwt::class,
         'auth.optional' => \App\Http\Middleware\OptionalAuthenticateWithJwt::class,
+        'verify.refresh.token' => VerifyRefreshTokenMiddleware::class
     ];
 }

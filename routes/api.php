@@ -17,13 +17,10 @@ Route::post('/activation', [UserRegistrationController::class, 'activation'])->n
 Route::post('/admin/auth/login', [AdminAuthController::class, 'login']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
-Route::get('/auth/refresh-token', [AuthController::class, 'refreshToken']);
-
 Route::get('/product', [ProductController::class, 'index']);
 Route::get('/product/{id}', [ProductController::class, 'show']);
 
 Route::get('/order', [OrderController::class])->middleware('auth.optional');
-
 
 Route::apiResource('order', OrderController::class);
 Route::apiResource('category', CategoryController::class);
@@ -40,6 +37,8 @@ Route::prefix('/order/{order}')
 Route::middleware('auth.api')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
+
+Route::middleware(['verify.refresh.token'])->get('/auth/refresh-token', [AuthController::class, 'refreshToken']);
 
 /** Csak adminnak elérhető route-ok */
 Route::middleware('check.admin.jwt')->group(function () {
