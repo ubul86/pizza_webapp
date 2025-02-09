@@ -43,13 +43,19 @@ Route::middleware(['verify.refresh.token'])->get('/auth/refresh-token', [AuthCon
 /** Csak adminnak elérhető route-ok */
 Route::middleware('check.admin.jwt')->group(function () {
     Route::get('/user/get-authenticated-user', [UserController::class, 'getAuthenticatedUser']);
-    Route::post('/product', [AdminProductController::class, 'store']);
-    Route::put('/product/{id}', [AdminProductController::class, 'update']);
-    Route::delete('/product/{id}', [AdminProductController::class, 'destroy']);
-    Route::delete('/product/bulk-destroy', [AdminProductController::class, 'bulkDestroy']);
-    Route::post('/product/upload-images/{itemId}', [AdminProductController::class, 'uploadImages']);
-    Route::post('/product/set-image-to-first', [AdminProductController::class, 'setImageToFirst']);
-    Route::post('/product/delete-image', [AdminProductController::class, 'deleteImage']);
+
+    Route::get('/admin/product', [ProductController::class, 'index']);
+    Route::get('/admin/product/{id}', [ProductController::class, 'show']);
+    Route::post('/admin/product', [AdminProductController::class, 'store']);
+    Route::put('/admin/product/{id}', [AdminProductController::class, 'update']);
+    Route::delete('/admin/product/{id}', [AdminProductController::class, 'destroy']);
+    Route::delete('/admin/product/bulk-destroy', [AdminProductController::class, 'bulkDestroy']);
+    Route::post('/admin/product/upload-images/{itemId}', [AdminProductController::class, 'uploadImages']);
+    Route::post('/admin/product/set-image-to-first', [AdminProductController::class, 'setImageToFirst']);
+    Route::post('/admin/product/delete-image', [AdminProductController::class, 'deleteImage']);
+
+
+
 });
 
 Route::apiResource('user', UserController::class);

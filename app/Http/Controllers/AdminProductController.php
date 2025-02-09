@@ -6,6 +6,7 @@ use App\Http\Requests\UploadedImageRequest;
 use App\Http\Resources\ProductResource;
 use App\Services\ProductImageService;
 use App\Services\ProductService;
+use App\traits\controllers\ProductControllerTrait;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -15,29 +16,14 @@ use Illuminate\Http\Request;
 
 class AdminProductController extends Controller
 {
-    protected ProductService $productService;
+    use ProductControllerTrait;
+
     protected ProductImageService $productImageService;
 
     public function __construct(ProductService $productService, ProductImageService $productImageService)
     {
         $this->productService = $productService;
         $this->productImageService = $productImageService;
-    }
-
-    public function index(): JsonResponse
-    {
-        $products = $this->productService->index();
-        return response()->json(ProductResource::collection($products));
-    }
-
-    public function show(int $id): JsonResponse
-    {
-        try {
-            $product = $this->productService->show($id);
-            return response()->json(new ProductResource($product));
-        } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
-        }
     }
 
     public function store(StoreProductRequest $request): JsonResponse

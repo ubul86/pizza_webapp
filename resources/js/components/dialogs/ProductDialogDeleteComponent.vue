@@ -1,11 +1,11 @@
 <script setup>
 
-import { useProductStore } from '@/stores/product.store.js';
+import { useAdminProductStore } from '@/stores/admin.product.store.js';
 import { useToast } from 'vue-toastification';
 import { ref, watch } from 'vue'
 
 const toast = useToast();
-const productStore = useProductStore();
+const productStore = useAdminProductStore();
 
 const props = defineProps({
     isDialogDeleteOpen: {

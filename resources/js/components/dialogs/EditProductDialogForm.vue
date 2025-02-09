@@ -13,13 +13,13 @@
 import { computed, ref, watch, onMounted } from 'vue'
 import DialogForm from './DialogForm.vue';
 import useForm from '@/composables/useForm.js';
-import { useProductStore } from '@/stores/product.store.js';
+import { useAdminProductStore } from '@/stores/admin.product.store.js'
 import { useCategoryStore } from '@/stores/category.store.js';
 import { useToast } from 'vue-toastification';
 
 const { formErrors, resetErrors, handleApiError } = useForm();
 
-const productStore = useProductStore();
+const productStore = useAdminProductStore();
 const categoryStore = useCategoryStore();
 
 const toast = useToast()

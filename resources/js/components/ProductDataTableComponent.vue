@@ -127,7 +127,7 @@
 
 <script setup>
 import { ref, reactive, computed, nextTick, onMounted, onBeforeUnmount } from 'vue'
-import { useProductStore } from '@/stores/product.store.js';
+import { useAdminProductStore } from '@/stores/admin.product.store.js'
 
 import { useToast } from 'vue-toastification';
 
@@ -177,7 +177,7 @@ const dialogBulkText = 'Are you sure you want to delete all the selected items?'
 
 const toast = useToast()
 
-const productStore = useProductStore();
+const productStore = useAdminProductStore();
 
 const headers = [
     {
