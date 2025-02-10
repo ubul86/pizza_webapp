@@ -1,6 +1,6 @@
 <?php
 
-namespace App\traits\controllers;
+namespace App\Traits\Controllers;
 
 use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;

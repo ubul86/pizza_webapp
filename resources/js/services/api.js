@@ -2,79 +2,64 @@ import axios from 'axios';
 import { useAuthStore } from '@/stores/auth.store.js';
 import router from '@/routers';
 
-const publicApi = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-});
+const baseURL = import.meta.env.VITE_API_URL;
 
-publicApi.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    },
-);
+const createApi = (requiresAuth = false) => {
+    const api = axios.create({ baseURL });
 
-
-const privateApi = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-});
-
-privateApi.interceptors.request.use(
-    async (config) => {
-
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            return Promise.reject({ status: 401, message: "There is no valid token!" });
-        }
-        if (!config.headers.Authorization) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    },
-);
-
-privateApi.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        if (error && error.status === 401) {
-            const authStore = useAuthStore();
-
-            try {
-                const token = await authStore.refreshToken();
-                if (token) {
-                    localStorage.setItem('token', token);
-                    error.config.headers.Authorization = `Bearer ${token}`;
-                    return privateApi(error.config);
-                } else {
-                    authStore.removeToken();
-                    return Promise.reject({ navigateToLogin: true });
+    api.interceptors.request.use(
+        async (config) => {
+            if (!config.headers.Authorization) {
+                const token = localStorage.getItem('token');
+                if (requiresAuth && !token) {
+                    return Promise.reject({ status: 401, message: "There is no valid token!" });
                 }
-            } catch (refreshError) {
-                console.log(refreshError);
-                authStore.removeToken();
-                return Promise.reject({ navigateToLogin: true });
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
             }
-        }
-        return Promise.reject(error);
-    },
-);
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
+
+    api.interceptors.response.use(
+        (response) => response,
+        async (error) => {
+            if (error?.status === 401) {
+                const authStore = useAuthStore();
+
+                try {
+                    const token = await authStore.refreshToken();
+                    if (token) {
+                        localStorage.setItem('token', token);
+                        error.config.headers.Authorization = `Bearer ${token}`;
+                        return api(error.config);
+                    } else {
+                        authStore.removeToken();
+                        return Promise.reject(requiresAuth ? { navigateToLogin: true } : {});
+                    }
+                } catch (refreshError) {
+                    console.log(refreshError);
+                    authStore.removeToken();
+                    return Promise.reject(requiresAuth ? { navigateToLogin: true } : {});
+                }
+            }
+            return Promise.reject(error);
+        },
+    );
+
+    return api;
+};
+
+const publicApi = createApi();
+const privateApi = createApi(true);
 
 privateApi.interceptors.response.use(
     (response) => response,
     async (error) => {
         if (error.navigateToLogin) {
-            return router.replace({ name: 'AdminLogin' }).then(() => {
-                return Promise.reject({ navigateToLogin: true });
-            });
+            return router.replace({ name: 'Home' }).then(() => Promise.reject({ navigateToLogin: true }));
         }
         return Promise.reject(error);
     },

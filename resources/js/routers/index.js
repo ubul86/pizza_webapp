@@ -99,21 +99,17 @@ router.beforeEach(async (to, from, next) => {
         await userStore.getAuthenticatedUser();
     }
 
-    let isAdmin = false;
-
-    if (userStore.user) {
-        isAdmin = userStore.user.is_admin;
-    }
+    const isAdmin = userStore.user?.is_admin || false;
 
     if (to.name === 'AdminLogin' && isAuthenticated && isAdmin) {
         return next({ name: 'AdminHome' });
     }
 
-    if (to.meta.requiresAuth && !isAuthenticated) {
+    if (to.name === 'AdminLogin' && isAuthenticated && !isAdmin) {
         return next({ name: 'AdminLogin' });
     }
 
-    if (to.meta.needAdminPermission && !isAdmin) {
+    if (to.meta.needAdminPermission && (!isAuthenticated || !isAdmin)) {
         return next({ name: 'AdminLogin' });
     }
 

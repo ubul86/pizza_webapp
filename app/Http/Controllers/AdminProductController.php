@@ -6,7 +6,7 @@ use App\Http\Requests\UploadedImageRequest;
 use App\Http\Resources\ProductResource;
 use App\Services\ProductImageService;
 use App\Services\ProductService;
-use App\traits\controllers\ProductControllerTrait;
+use App\traits\Controllers\ProductControllerTrait;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
