@@ -6,7 +6,8 @@ use App\Http\Requests\UploadedImageRequest;
 use App\Http\Resources\ProductResource;
 use App\Services\ProductImageService;
 use App\Services\ProductService;
-use App\traits\Controllers\ProductControllerTrait;
+use App\Traits\Controllers\ProductControllerTrait;
+use App\Traits\HandleJsonResponse;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 class AdminProductController extends Controller
 {
     use ProductControllerTrait;
+    use HandleJsonResponse;
 
     protected ProductImageService $productImageService;
 
@@ -31,9 +33,9 @@ class AdminProductController extends Controller
         try {
             $validated = $request->validated();
             $product = $this->productService->store($validated);
-            return response()->json(new ProductResource($product), 201);
+            return $this->successResponse(new ProductResource($product), 201);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 400);
+            return $this->errorResponse($e);
         }
     }
 
@@ -42,11 +44,11 @@ class AdminProductController extends Controller
         try {
             $validated = $request->validated();
             $product = $this->productService->update($validated, $id);
-            return response()->json(new ProductResource($product));
+            return $this->successResponse(new ProductResource($product));
         } catch (ModelNotFoundException $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 400);
+            return $this->errorResponse($e, 400);
         }
     }
 
@@ -54,9 +56,9 @@ class AdminProductController extends Controller
     {
         try {
             $this->productService->destroy($id);
-            return response()->json(['message' => 'Product deleted successfully']);
+            return $this->successResponse(['message' => 'Product deleted successfully']);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 
@@ -65,9 +67,9 @@ class AdminProductController extends Controller
         try {
             $ids = explode(',', $request->input('ids'));
             $this->productService->bulkDestroy($ids);
-            return response()->json(['message' => 'Products deleted successfully']);
+            return $this->successResponse(['message' => 'Products deleted successfully']);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 
@@ -79,9 +81,9 @@ class AdminProductController extends Controller
 
             $files = is_array($files) ? $files : [$files];
             $product = $this->productImageService->uploadImages($itemId, $files);
-            return response()->json(new ProductResource($product));
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to upload images'], 500);
+            return $this->successResponse(new ProductResource($product));
+        } catch (Exception $e) {
+            return $this->errorResponse($e, 500);
         }
     }
 
@@ -89,9 +91,9 @@ class AdminProductController extends Controller
     {
         try {
             $this->productImageService->setImageToFirst($request->get('productId'), $request->get('imageId'));
-            return response()->json(['message' => 'Products deleted successfully']);
+            return $this->successResponse(['message' => 'Successfully set first product image']);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 
@@ -99,9 +101,9 @@ class AdminProductController extends Controller
     {
         try {
             $this->productImageService->deleteImage($request->get('productId'), $request->get('imageId'));
-            return response()->json(['message' => 'Products deleted successfully']);
+            return $this->successResponse(['message' => 'Product Image deleted successfully']);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 }

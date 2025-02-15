@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ProductService;
-use App\traits\Controllers\ProductControllerTrait;
+use App\Traits\Controllers\ProductControllerTrait;
 
 class ProductController extends Controller
 {
