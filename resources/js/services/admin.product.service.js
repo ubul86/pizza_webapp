@@ -65,7 +65,7 @@ class AdminProductService {
 
     setImageToFirst(productId, imageId) {
         return privateApi
-            .post(`/product/set-image-to-first`, {
+            .post(`/admin/product/set-image-to-first`, {
                 productId,
                 imageId
             })
@@ -77,7 +77,7 @@ class AdminProductService {
 
     deleteImage(productId, imageId) {
         return privateApi
-            .post(`/product/delete-image`, {
+            .post(`/admin/product/delete-image`, {
                 productId,
                 imageId
             })

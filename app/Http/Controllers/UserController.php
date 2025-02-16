@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Services\UserService;
+use App\Traits\HandleJsonResponse;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
+    use HandleJsonResponse;
+
     protected UserService $userService;
 
     public function __construct(UserService $userService)
@@ -18,18 +21,18 @@ class UserController extends Controller
     {
         try {
             $users =  $this->userService->index();
-            return response()->json($users);
+            return $this->successResponse($users);
         } catch (\Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 
     public function getAuthenticatedUser(): JsonResponse
     {
         try {
-            return response()->json(auth()->user());
+            return $this->successResponse(auth()->user());
         } catch (\Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 }

@@ -67,6 +67,15 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "deptrac": [
+            "@php vendor/bin/deptrac analyse"
+        ],
+        "phpmd": [
+            "@php vendor/bin/phpmd app/ text phpmd.xml"
+        ],
+        "phpmetrics": [
+            "@php ./vendor/bin/phpmetrics --report-html=myreport app/"
         ]
     },
     "extra": {

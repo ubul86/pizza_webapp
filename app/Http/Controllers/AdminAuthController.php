@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class AdminAuthController extends Controller
 {
     use HandleJsonResponse;
+
     protected UserAuthenticationInterface $authRepository;
     public function __construct(UserAuthenticationInterface $authRepository)
     {

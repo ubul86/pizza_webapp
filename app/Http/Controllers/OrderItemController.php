@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\OrderItemResource;
 use App\Services\OrderItemService;
+use App\Traits\HandleJsonResponse;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -14,6 +15,8 @@ use Illuminate\Http\Request;
 
 class OrderItemController extends Controller
 {
+    use HandleJsonResponse;
+
     protected OrderItemService $orderItemService;
 
     public function __construct(OrderItemService $orderItemService)
@@ -24,16 +27,16 @@ class OrderItemController extends Controller
     public function index(Request $request, Order $order): JsonResponse
     {
         $items = $this->orderItemService->index($order->id, $request->all());
-        return response()->json(OrderItemResource::collection($items));
+        return $this->successResponse(OrderItemResource::collection($items));
     }
 
     public function show(Order $order, int $id): JsonResponse
     {
         try {
             $item = $this->orderItemService->show($order->id, $id);
-            return response()->json(new OrderItemResource($item));
+            return $this->successResponse(new OrderItemResource($item));
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 
@@ -42,9 +45,9 @@ class OrderItemController extends Controller
         try {
             $validated = $request->validated();
             $item = $this->orderItemService->store($order->id, $validated);
-            return response()->json(new OrderItemResource($item), 201);
+            return $this->successResponse(new OrderItemResource($item), 201);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 400);
+            return $this->errorResponse($e);
         }
     }
 
@@ -53,11 +56,11 @@ class OrderItemController extends Controller
         try {
             $validated = $request->validated();
             $item = $this->orderItemService->update($order->id, $validated, $id);
-            return response()->json(new OrderItemResource($item));
+            return $this->successResponse(new OrderItemResource($item));
         } catch (ModelNotFoundException $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 400);
+            return $this->errorResponse($e);
         }
     }
 
@@ -65,9 +68,9 @@ class OrderItemController extends Controller
     {
         try {
             $this->orderItemService->destroy($order->id, $id);
-            return response()->json(['message' => 'Order Item deleted successfully']);
+            return $this->successResponse(['message' => 'Order Item deleted successfully']);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 }

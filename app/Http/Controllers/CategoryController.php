@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoryResource;
 use App\Services\CategoryService;
+use App\Traits\HandleJsonResponse;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -12,6 +13,8 @@ use App\Http\Requests\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
+    use HandleJsonResponse;
+
     protected CategoryService $categoryService;
 
     public function __construct(CategoryService $categoryService)
@@ -22,16 +25,16 @@ class CategoryController extends Controller
     public function index(): JsonResponse
     {
         $items = $this->categoryService->index();
-        return response()->json(CategoryResource::collection($items));
+        return $this->successResponse(CategoryResource::collection($items));
     }
 
     public function show(int $id): JsonResponse
     {
         try {
             $item = $this->categoryService->show($id);
-            return response()->json(new CategoryResource($item));
+            return $this->successResponse(new CategoryResource($item));
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 
@@ -40,9 +43,9 @@ class CategoryController extends Controller
         try {
             $validated = $request->validated();
             $item = $this->categoryService->store($validated);
-            return response()->json(new CategoryResource($item), 201);
+            return $this->successResponse(new CategoryResource($item), 201);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 400);
+            return $this->errorResponse($e);
         }
     }
 
@@ -51,11 +54,11 @@ class CategoryController extends Controller
         try {
             $validated = $request->validated();
             $item = $this->categoryService->update($validated, $id);
-            return response()->json(new CategoryResource($item));
+            return $this->successResponse(new CategoryResource($item));
         } catch (ModelNotFoundException $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 400);
+            return $this->errorResponse($e);
         }
     }
 
@@ -63,9 +66,9 @@ class CategoryController extends Controller
     {
         try {
             $this->categoryService->destroy($id);
-            return response()->json(['message' => 'Category deleted successfully']);
+            return $this->successResponse(['message' => 'Category deleted successfully']);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['errors' => $e->getMessage()], 404);
+            return $this->errorResponse($e, 404);
         }
     }
 }

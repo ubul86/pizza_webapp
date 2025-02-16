@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ActivationRequest;
 use App\Http\Requests\RegistrationRequest;
 use App\Services\UserRegistrationService;
+use App\Traits\HandleJsonResponse;
 use Illuminate\Http\JsonResponse;
 
 class UserRegistrationController extends Controller
 {
+    use HandleJsonResponse;
+
     protected UserRegistrationService $userRegistrationService;
 
     public function __construct(UserRegistrationService $userRegistrationService)
@@ -20,10 +23,9 @@ class UserRegistrationController extends Controller
     {
         try {
             $this->userRegistrationService->registration($request->toArray());
-
-            return response()->json(['message' => 'Registration is success! Please check your mail to activate your user.']);
+            return $this->successResponse(['message' => 'Registration is success! Please check your mail to activate your user.']);
         } catch (\Exception $e) {
-            throw $e;
+            return $this->errorResponse($e);
         }
     }
 
@@ -31,10 +33,9 @@ class UserRegistrationController extends Controller
     {
         try {
             $this->userRegistrationService->activation($request->token);
-
-            return response()->json(['message' => 'User activated successfully!']);
+            return $this->successResponse(['message' => 'User activated successfully!']);
         } catch (\Exception $e) {
-            throw $e;
+            return $this->errorResponse($e);
         }
     }
 }

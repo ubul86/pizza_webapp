@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Repositories\Interfaces\UserAuthenticationInterface;
+use App\Traits\HandleJsonResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    use HandleJsonResponse;
+
     protected UserAuthenticationInterface $authRepository;
 
     public function __construct(UserAuthenticationInterface $authRepository)
@@ -28,10 +31,9 @@ class AuthController extends Controller
 
         try {
             $arrayOfTokens = $this->authRepository->login($credentials);
-
-            return response()->json($arrayOfTokens);
+            return $this->successResponse($arrayOfTokens);
         } catch (NotFoundHttpException $e) {
-            throw $e;
+            return $this->errorResponse($e);
         }
     }
 
@@ -45,14 +47,14 @@ class AuthController extends Controller
             }
 
             if ($this->authRepository->logout($token)) {
-                return response()->json([
+                return $this->successResponse([
                     'message' => 'Successfully logged out'
                 ]);
             }
 
             throw new RuntimeException('Could not invalidate token', 500);
         } catch (JWTException $e) {
-            throw $e;
+            return $this->errorResponse($e);
         }
     }
 
@@ -61,12 +63,12 @@ class AuthController extends Controller
         try {
             $user = auth()->user();
             $token = JWTAuth::fromUser($user);
-            return response()->json([
+            return $this->successResponse([
                 'token' => $token,
             ]);
         } catch (Exception $e) {
             Log::error($e);
-            return response()->json(['error' => 'Could not refresh token'], 402);
+            return $this->errorResponse($e, 402);
         }
     }
 }
