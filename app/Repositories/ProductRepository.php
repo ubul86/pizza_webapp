@@ -4,17 +4,17 @@ namespace App\Repositories;
 
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Pagination\CursorPaginator;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    /** @return EloquentCollection<int, Product> */
-    public function index(): EloquentCollection
+    /** @return CursorPaginator<Product> */
+    public function index(): CursorPaginator
     {
-        return Product::with('images')->get();
+        return Product::with('images')->cursorPaginate(10);
     }
 
     public function show(int $id): Product

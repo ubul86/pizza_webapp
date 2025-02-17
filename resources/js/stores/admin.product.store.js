@@ -8,7 +8,8 @@ export const useAdminProductStore = defineStore('adminProduct', {
     actions: {
         async fetchProducts() {
             try {
-                this.products = await adminProductService.getProducts();
+                const result = await adminProductService.getProducts();
+                this.products = result.items;
             }
             catch(error) {
                 console.log(error);

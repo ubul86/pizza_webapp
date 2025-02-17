@@ -2,13 +2,13 @@
 
 namespace App\Repositories\Interfaces;
 
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use App\Models\Product;
+use Illuminate\Pagination\CursorPaginator;
 
 interface ProductRepositoryInterface
 {
-    /** @return EloquentCollection<int, Product> */
-    public function index(): EloquentCollection;
+    /** @return CursorPaginator<Product> */
+    public function index(): CursorPaginator;
     public function show(int $id): Product;
     public function store(array $data): Product;
     public function update(int $id, array $data): Product;

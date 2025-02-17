@@ -4,11 +4,14 @@ import productService from '@/services/product.service.js'
 export const useProductStore = defineStore('product', {
     state: () => ({
         products: [],
+        meta: [],
     }),
     actions: {
-        async fetchProducts() {
+        async fetchProducts(params) {
             try {
-                this.products = await productService.getProducts();
+                const result = await productService.getProducts(params);
+                this.products.push(...result.items);
+                this.meta = result.meta;
             }
             catch(error) {
                 console.log(error);

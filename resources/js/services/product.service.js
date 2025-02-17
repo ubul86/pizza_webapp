@@ -1,9 +1,14 @@
 import { publicApi } from "./api";
 
 class ProductService {
-    getProducts() {
+    getProducts(params) {
+
+        const url= params
+            ? `/product?cursor=${params}`
+            : `/product`
+
         return publicApi
-            .get("/product")
+            .get(url)
             .then((response) => response.data.data)
             .catch((error) => {
                 console.error("Failed to fetch products:", error);

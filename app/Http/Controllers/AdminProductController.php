@@ -7,7 +7,6 @@ use App\Http\Resources\ProductResource;
 use App\Services\ProductImageService;
 use App\Services\ProductService;
 use App\Traits\Controllers\ProductControllerTrait;
-use App\Traits\HandleJsonResponse;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -18,7 +17,6 @@ use Illuminate\Http\Request;
 class AdminProductController extends Controller
 {
     use ProductControllerTrait;
-    use HandleJsonResponse;
 
     protected ProductImageService $productImageService;
 

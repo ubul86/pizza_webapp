@@ -5,11 +5,10 @@ namespace App\Services;
 use App\Factories\ImageUploaderFactory;
 use App\Models\Image;
 use App\Models\Product;
-use App\Models\ProductImage;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Pagination\CursorPaginator;
 
 class ProductService
 {
@@ -20,8 +19,8 @@ class ProductService
         $this->productRepository = $productRepository;
     }
 
-    /** @return EloquentCollection<int, Product> */
-    public function index(): EloquentCollection
+    /** @return CursorPaginator<Product> */
+    public function index(): CursorPaginator
     {
         return $this->productRepository->index();
     }

@@ -1,6 +1,7 @@
 <script setup>
-    import { ref, computed, onMounted } from 'vue';
-    import { useCategoryStore } from '@/stores/category.store.js';
+import { ref, onMounted, computed } from 'vue'
+
+import { useCategoryStore } from '@/stores/category.store.js';
     import { useProductStore } from '@/stores/product.store.js'
     import AddToOrderButton from '@/components/AddToOrderButton.vue';
 
@@ -12,10 +13,29 @@
 
     const categories = computed( () => categoryStore.categories);
     const products = computed( () => productStore.products);
+    const meta = computed(() => productStore.meta);
+
+    const isLoading = ref(false)
+    const loadMoreTrigger = ref(null)
 
     onMounted(() => {
         categoryStore.fetchCategories();
-        productStore.fetchProducts();
+
+        fetchProducts()
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && meta.value.next_cursor) {
+                    fetchProducts()
+                }
+            },
+            { rootMargin: '100px' }
+        )
+
+        if (loadMoreTrigger.value) {
+            observer.observe(loadMoreTrigger.value)
+        }
+
     });
 
     const selectedCategories = ref([]);
@@ -35,6 +55,21 @@
             selectedCategories.value.push(id);
         }
     }
+
+    const fetchProducts = async () => {
+        if (isLoading.value) {
+            return
+        }
+
+        isLoading.value = true
+
+        try {
+            await productStore.fetchProducts(meta?.value?.next_cursor ?? null)
+        } finally {
+            isLoading.value = false
+        }
+    }
+
 </script>
 
 <style>
@@ -51,6 +86,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
+    position: relative;
+}
+
+.observer-trigger {
+    height: 1px;
+    width: 100%;
 }
 
 .product-card .v-card {
@@ -145,7 +186,7 @@
             <v-col>
                 <div class="products-container">
                     <v-row>
-                        <v-col cols=12 sm="4" md="4" lg="3" xl="2" v-for="product in selectedProducts" :key="product.id" class="product-card m-2">
+                        <v-col cols=12 v-for="product in selectedProducts" :key="product.id" class="product-card m-2">
                             <v-hover>
                                 <template v-slot:default="{ isHovering, props }">
                                     <v-card
@@ -180,6 +221,8 @@
                             </v-hover>
                         </v-col>
                     </v-row>
+                    <div ref="loadMoreTrigger" class="observer-trigger"></div>
+                    <v-progress-circular v-if="isLoading" indeterminate color="primary" class="my-4" />
                 </div>
             </v-col>
         </v-row>
