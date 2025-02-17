@@ -151,8 +151,8 @@ import { useCategoryStore } from '@/stores/category.store.js';
     box-shadow: 0 3px 4px #aaa;
 }
 
-.product-name-text {
-    text-align: right;
+.v-overlay {
+    backdrop-filter: blur(5px);
 }
 
 </style>
@@ -222,7 +222,9 @@ import { useCategoryStore } from '@/stores/category.store.js';
                         </v-col>
                     </v-row>
                     <div ref="loadMoreTrigger" class="observer-trigger"></div>
-                    <v-progress-circular v-if="isLoading" indeterminate color="primary" class="my-4" />
+                    <v-overlay v-model="isLoading" class="d-flex align-center justify-center">
+                        <v-progress-circular indeterminate color="primary" size="64" />
+                    </v-overlay>
                 </div>
             </v-col>
         </v-row>
