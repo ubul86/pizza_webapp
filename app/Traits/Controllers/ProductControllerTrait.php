@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Services\ProductService;
 use App\Traits\FormatsMeta;
 use App\Traits\HandleJsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\ProductResource;
 use Exception;
@@ -18,9 +19,9 @@ trait ProductControllerTrait
 
     protected ProductService $productService;
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $products = $this->productService->index();
+        $products = $this->productService->index($request->all());
         return $this->successResponse([
             'items' => ProductResource::collection($products->items()),
             'meta' => $this->formatMeta($products)

@@ -61,10 +61,20 @@ import { useCategoryStore } from '@/stores/category.store.js';
             return
         }
 
+        const params = {};
+
+        if (meta.value?.next_cursor) {
+            params.cursor = meta.value.next_cursor;
+        }
+
+        if (selectedCategories.value?.length) {
+            params.filter = { categories: selectedCategories.value.join(',') };
+        }
+
         isLoading.value = true
 
         try {
-            await productStore.fetchProducts(meta?.value?.next_cursor ?? null)
+            await productStore.fetchProducts(params)
         } finally {
             isLoading.value = false
         }

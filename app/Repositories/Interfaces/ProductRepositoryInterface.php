@@ -8,7 +8,7 @@ use Illuminate\Pagination\CursorPaginator;
 interface ProductRepositoryInterface
 {
     /** @return CursorPaginator<Product> */
-    public function index(): CursorPaginator;
+    public function index(array $data): CursorPaginator;
     public function show(int $id): Product;
     public function store(array $data): Product;
     public function update(int $id, array $data): Product;

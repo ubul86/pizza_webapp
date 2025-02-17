@@ -20,9 +20,9 @@ class ProductService
     }
 
     /** @return CursorPaginator<Product> */
-    public function index(): CursorPaginator
+    public function index(array $data): CursorPaginator
     {
-        return $this->productRepository->index();
+        return $this->productRepository->index($data);
     }
 
     public function show(int $id): Product

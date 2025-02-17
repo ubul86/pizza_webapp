@@ -12,9 +12,18 @@ use Illuminate\Pagination\CursorPaginator;
 class ProductRepository implements ProductRepositoryInterface
 {
     /** @return CursorPaginator<Product> */
-    public function index(): CursorPaginator
+    public function index(array $data): CursorPaginator
     {
-        return Product::with('images')->cursorPaginate(10);
+        $query = Product::with('images');
+
+        if (!empty($data['categories'])) {
+            $categoryIds = explode(',', $data['categories']);
+            $query->whereHas('categories', function ($q) use ($categoryIds) {
+                $q->whereIn('id', $categoryIds);
+            });
+        }
+
+        return $query->cursorPaginate(10);
     }
 
     public function show(int $id): Product
