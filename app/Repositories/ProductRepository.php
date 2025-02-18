@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Pagination\CursorPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    /** @return CursorPaginator<Product> */
-    public function index(array $data): CursorPaginator
+    /** @return CursorPaginator<Product>|LengthAwarePaginator<Product> */
+    public function index(array $data, bool $isAdmin = false): CursorPaginator|LengthAwarePaginator
     {
         $query = Product::with('images');
 
@@ -23,7 +24,14 @@ class ProductRepository implements ProductRepositoryInterface
             });
         }
 
-        return $query->cursorPaginate(10);
+        if ($isAdmin) {
+            return $query->cursorPaginate(10);
+        }
+        else {
+            $perPage = $data['itemsPerPage'] ?? 10;
+            $page = $data['page'] ?? 1;
+            return $query->paginate($perPage, ['*'], 'page', $page);
+        }
     }
 
     public function show(int $id): Product

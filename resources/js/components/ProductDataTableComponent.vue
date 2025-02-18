@@ -16,17 +16,21 @@
         </v-card>
     </v-dialog>
 
-
-    <v-data-table
+    <v-data-table-server
         v-model="selected"
         :headers="computedHeaders"
         show-select
-        :items="filteredItems"
+        :items="productStore.products"
         v-model:search="search"
-        :filter-keys="['name', 'price']"
+        :filter-keys="['name']"
         :mobile="smAndDown"
+        @update:options="loadItems"
+        :items-per-page="productStore?.meta?.items_per_page"
+        :items-length="productStore?.meta?.total_items"
+        :loading="tableLoadingItems"
 
     >
+
         <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>Products</v-toolbar-title>
@@ -55,7 +59,7 @@
         <template v-slot:no-data>
             <v-btn color="primary" @click="initialize">Reset</v-btn>
         </template>
-    </v-data-table>
+    </v-data-table-server>
 
     <v-row v-if="selected.length">
         <v-col>
@@ -210,24 +214,39 @@ const defaultItem = {
 
 const search = ref('');
 
-const nameSearch = ref(null);
-
 const toggleHeaders = ref(['id','name', 'price', 'category', 'created_at', 'updated_at', 'actions']);
 
 const computedHeaders = computed(() => {
     return headers.filter(header => toggleHeaders.value.includes(header.key));
 })
 
+const tableLoadingItems = ref(true);
 
-const filteredItems = computed(() => {
-    let filtered = productStore.products;
-
-    if (nameSearch.value) {
-        filtered = filtered.filter((product) => product.name === nameSearch.value);
-    }
-
-    return filtered;
+const tableParams = reactive({
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: [],
+    search: '',
+    additionalFilters: {},
 });
+
+const loadItems = async (params) => {
+
+    tableLoadingItems.value = true;
+
+    Object.assign(tableParams, params);
+
+    const filters = {};
+
+    const combinedParams = {
+        ...tableParams,
+        filters
+    };
+
+    await productStore.fetchProducts(combinedParams)
+    tableLoadingItems.value = false;
+}
+
 
 const editItem = (item) => {
     editedIndex.value = productStore.products.indexOf(item)

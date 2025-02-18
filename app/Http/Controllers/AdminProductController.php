@@ -24,6 +24,7 @@ class AdminProductController extends Controller
     {
         $this->productService = $productService;
         $this->productImageService = $productImageService;
+        $this->isAdmin = true;
     }
 
     public function store(StoreProductRequest $request): JsonResponse

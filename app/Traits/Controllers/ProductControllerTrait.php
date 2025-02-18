@@ -18,10 +18,11 @@ trait ProductControllerTrait
     use FormatsMeta;
 
     protected ProductService $productService;
+    protected bool $isAdmin = false;
 
     public function index(Request $request): JsonResponse
     {
-        $products = $this->productService->index($request->all());
+        $products = $this->productService->index($request->all(), $this->isAdmin);
         return $this->successResponse([
             'items' => ProductResource::collection($products->items()),
             'meta' => $this->formatMeta($products)

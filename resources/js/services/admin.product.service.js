@@ -1,9 +1,9 @@
 import { publicApi, privateApi } from "./api";
 
 class AdminProductService {
-    getProducts() {
+    getProducts(params) {
         return publicApi
-            .get("/admin/product")
+            .get("/admin/product", {params})
             .then((response) => response.data.data)
             .catch((error) => {
                 console.error("Failed to fetch products:", error);

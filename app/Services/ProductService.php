@@ -9,6 +9,7 @@ use App\Repositories\Interfaces\ProductRepositoryInterface;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\CursorPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductService
 {
@@ -19,10 +20,10 @@ class ProductService
         $this->productRepository = $productRepository;
     }
 
-    /** @return CursorPaginator<Product> */
-    public function index(array $data): CursorPaginator
+    /** @return CursorPaginator<Product>|LengthAwarePaginator<Product> */
+    public function index(array $data, bool $isAdmin = false): CursorPaginator|LengthAwarePaginator
     {
-        return $this->productRepository->index($data);
+        return $this->productRepository->index($data, $isAdmin);
     }
 
     public function show(int $id): Product

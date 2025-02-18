@@ -6,9 +6,9 @@ export const useAdminProductStore = defineStore('adminProduct', {
         products: [],
     }),
     actions: {
-        async fetchProducts() {
+        async fetchProducts(params) {
             try {
-                const result = await adminProductService.getProducts();
+                const result = await adminProductService.getProducts(params);
                 this.products = result.items;
             }
             catch(error) {
