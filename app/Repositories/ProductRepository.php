@@ -6,7 +6,6 @@ use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
-use Carbon\Carbon;
 use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -19,15 +18,14 @@ class ProductRepository implements ProductRepositoryInterface
 
         if (!empty($data['categories'])) {
             $categoryIds = explode(',', $data['categories']);
-            $query->whereHas('categories', function ($q) use ($categoryIds) {
+            $query->whereHas('category', function ($q) use ($categoryIds) {
                 $q->whereIn('id', $categoryIds);
             });
         }
 
-        if ($isAdmin) {
+        if (!$isAdmin) {
             return $query->cursorPaginate(10);
-        }
-        else {
+        } else {
             $perPage = $data['itemsPerPage'] ?? 10;
             $page = $data['page'] ?? 1;
             return $query->paginate($perPage, ['*'], 'page', $page);
@@ -84,19 +82,6 @@ class ProductRepository implements ProductRepositoryInterface
             return true;
         } catch (Exception $e) {
             throw new Exception('Failed to delete product: ' . $e->getMessage());
-        }
-    }
-
-    public function setBulkCompleted(array $ids): string
-    {
-        $now = Carbon::now();
-        try {
-            Product::whereIn('id', $ids)
-                ->whereNull('completed_at')
-                ->update(['completed_at' => $now]);
-            return $now;
-        } catch (Exception $e) {
-            throw new Exception('Failed to set completed products: ' . $e->getMessage());
         }
     }
 }

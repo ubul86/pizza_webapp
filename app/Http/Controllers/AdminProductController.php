@@ -19,12 +19,12 @@ class AdminProductController extends Controller
     use ProductControllerTrait;
 
     protected ProductImageService $productImageService;
+    protected bool $isAdmin = true;
 
     public function __construct(ProductService $productService, ProductImageService $productImageService)
     {
         $this->productService = $productService;
         $this->productImageService = $productImageService;
-        $this->isAdmin = true;
     }
 
     public function store(StoreProductRequest $request): JsonResponse

@@ -44,8 +44,8 @@ Route::middleware(['verify.refresh.token'])->get('/auth/refresh-token', [AuthCon
 Route::middleware('check.admin.jwt')->group(function () {
     Route::get('/user/get-authenticated-user', [UserController::class, 'getAuthenticatedUser']);
 
-    Route::get('/admin/product', [ProductController::class, 'index']);
-    Route::get('/admin/product/{id}', [ProductController::class, 'show']);
+    Route::get('/admin/product', [AdminProductController::class, 'index']);
+    Route::get('/admin/product/{id}', [AdminProductController::class, 'show']);
     Route::post('/admin/product', [AdminProductController::class, 'store']);
     Route::put('/admin/product/{id}', [AdminProductController::class, 'update']);
     Route::delete('/admin/product/{id}', [AdminProductController::class, 'destroy']);

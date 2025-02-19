@@ -9,6 +9,8 @@ class ProductController extends Controller
 {
     use ProductControllerTrait;
 
+    protected bool $isAdmin = false;
+
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;

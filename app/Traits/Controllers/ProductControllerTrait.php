@@ -18,7 +18,6 @@ trait ProductControllerTrait
     use FormatsMeta;
 
     protected ProductService $productService;
-    protected bool $isAdmin = false;
 
     public function index(Request $request): JsonResponse
     {
